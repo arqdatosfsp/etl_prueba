@@ -6,44 +6,26 @@
 <title>Prueba Técnica — Python ETL</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#0d0f12; --surface:#14171c; --surface2:#1c2028;
-  --border:#2a2f3a; --border2:#3a4050;
-  --accent:#3b82f6; --accent2:#60a5fa;
-  --green:#22c55e; --green-dim:#166534; --green-bg:#052e16;
-  --red:#ef4444; --red-bg:#1c0606;
-  --amber:#f59e0b; --amber-bg:#1c1000;
-  --text:#e8eaf0; --text2:#8892a4; --text3:#555e6e;
-  --mono:'IBM Plex Mono',monospace;
-  --sans:'IBM Plex Sans',sans-serif;
-}
+:root{--bg:#0d0f12;--surface:#14171c;--surface2:#1c2028;--border:#2a2f3a;--border2:#3a4050;--accent:#3b82f6;--accent2:#60a5fa;--green:#22c55e;--green-dim:#166534;--green-bg:#052e16;--red:#ef4444;--red-bg:#1c0606;--amber:#f59e0b;--amber-bg:#1c1000;--text:#e8eaf0;--text2:#8892a4;--text3:#555e6e;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
 .shell{max-width:860px;margin:0 auto;padding:40px 24px 80px}
-.screen{display:none}
-.screen.on{display:block}
-
+.screen{display:none}.screen.on{display:block}
 .hdr{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:28px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
 .badge{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:3px;border:1px solid}
 .b-blue{color:var(--accent2);border-color:#1e3a5f;background:#0a1929}
 .b-amber{color:var(--amber);border-color:#4a3000;background:var(--amber-bg)}
 .b-green{color:var(--green);border-color:var(--green-dim);background:var(--green-bg)}
 h1{font-size:26px;font-weight:600;color:var(--text);letter-spacing:-.02em;line-height:1.2}
-h1 span{color:var(--accent2)}
-.subtitle{font-size:14px;color:var(--text2);margin-top:6px}
-
+h1 span{color:var(--accent2)}.subtitle{font-size:14px;color:var(--text2);margin-top:6px}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1rem}
-
 input[type=text]{width:100%;padding:10px 14px;border:1px solid var(--border2);border-radius:7px;font-size:15px;background:var(--surface2);color:var(--text);font-family:var(--sans)}
 input[type=text]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(59,130,246,.15)}
-
 button{font-family:var(--sans);font-size:13px;font-weight:500;padding:9px 18px;border-radius:7px;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text2);transition:all .12s}
 button:hover{background:var(--surface2);color:var(--text)}
 button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
 button.primary:hover{background:#2563eb}
 button:disabled{opacity:.35;cursor:default}
-button.ghost{border-color:var(--border2);color:var(--text2)}
-
 .tabs{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:1.5rem;background:var(--surface)}
 .tab{flex:1;padding:10px 16px;cursor:pointer;font-size:13px;color:var(--text2);background:transparent;border:none;border-right:1px solid var(--border);font-family:var(--sans);display:flex;align-items:center;gap:8px;transition:all .12s}
 .tab:last-child{border-right:none}
@@ -51,16 +33,13 @@ button.ghost{border-color:var(--border2);color:var(--text2)}
 .tab.active{background:var(--surface2);color:var(--accent2)}
 .tnum{width:20px;height:20px;border-radius:50%;border:1px solid var(--border2);font-size:11px;display:flex;align-items:center;justify-content:center;color:var(--text3);flex-shrink:0}
 .tab.active .tnum{border-color:var(--accent);color:var(--accent2);background:#0a1929}
-
 .prog-row{display:flex;justify-content:space-between;margin-bottom:6px}
 .prog-lbl{font-family:var(--mono);font-size:11px;color:var(--text3)}
 .prog-track{height:2px;background:var(--border);border-radius:2px;margin-bottom:1.25rem}
 .prog-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s}
-
 .q-num{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
 .q-text{font-size:15px;color:var(--text);line-height:1.65;margin-bottom:1rem}
 .q-text code{font-family:var(--mono);font-size:12px;color:var(--accent2);background:#0a1929;border:1px solid #1e3a5f;padding:1px 5px;border-radius:3px}
-
 .opts{display:flex;flex-direction:column;gap:7px}
 .opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:7px;cursor:pointer;background:transparent;text-align:left;font-family:var(--sans);font-size:14px;color:var(--text);width:100%;transition:all .1s}
 .opt:hover:not(:disabled){border-color:var(--border2);background:var(--surface2)}
@@ -72,18 +51,14 @@ button.ghost{border-color:var(--border2);color:var(--text2)}
 .opt.ok .okey{border-color:var(--green);color:var(--green);background:var(--green-bg)}
 .opt.bad .okey{border-color:var(--red);color:var(--red);background:var(--red-bg)}
 .opt.sel .okey{border-color:var(--accent);color:var(--accent2);background:#0a1929}
-
 .fb{font-size:13px;line-height:1.6;padding:10px 12px;border-radius:7px;margin-top:8px;border:1px solid}
 .fb.ok{background:var(--green-bg);color:#86efac;border-color:var(--green-dim)}
 .fb.bad{background:var(--red-bg);color:#fca5a5;border-color:#4d1010}
-
 .nav{display:flex;align-items:center;justify-content:space-between;margin-top:1.25rem}
 .score-info{font-family:var(--mono);font-size:11px;color:var(--text3)}
-
-pre.cb{font-family:var(--mono);font-size:12px;line-height:1.7;background:#080b0f;border:1px solid var(--border);border-radius:10px;padding:1.25rem;overflow-x:auto;white-space:pre;color:#c9d3e0;margin-bottom:1rem;position:relative}
-.copy-btn{position:absolute;top:10px;right:12px;font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:4px;border:1px solid var(--border2);background:var(--surface2);color:var(--text3);cursor:pointer}
+pre.cb{font-family:var(--mono);font-size:12px;line-height:1.7;background:#080b0f;border:1px solid var(--border);border-radius:10px;padding:1.25rem;overflow-x:auto;white-space:pre;color:#c9d3e0;margin-bottom:1rem}
+.copy-btn{float:right;margin-top:-4px;font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:4px;border:1px solid var(--border2);background:var(--surface2);color:var(--text3);cursor:pointer}
 .copy-btn:hover{color:var(--text);border-color:var(--accent)}
-
 .task-list{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:1rem}
 .task-row{display:flex;gap:12px;align-items:flex-start;padding:12px 16px;border-bottom:1px solid var(--border);font-size:14px;color:var(--text)}
 .task-row:last-child{border-bottom:none}
@@ -92,52 +67,17 @@ pre.cb{font-family:var(--mono);font-size:12px;line-height:1.7;background:#080b0f
 .tt-tr{color:#a78bfa;background:#0f0720;border-color:#2d1a50}
 .tt-lo{color:#fb923c;background:#1c0a00;border-color:#4d2000}
 .tt-bo{color:var(--amber);background:var(--amber-bg);border-color:#4a3000}
-
 textarea{width:100%;min-height:300px;font-family:var(--mono);font-size:13px;padding:1rem;border:1px solid var(--border);border-radius:10px;background:#080b0f;color:#c9d3e0;resize:vertical;line-height:1.6}
 textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(59,130,246,.12)}
-
 .spinner{width:26px;height:26px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-.eval-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:1rem}
-.eval-top{display:flex;align-items:flex-start;gap:1.25rem;padding:1.25rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
-.score-big{font-family:var(--mono);font-size:52px;font-weight:500;line-height:1;flex-shrink:0}
-.crit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));border-bottom:1px solid var(--border)}
-.crit-cell{padding:10px 14px;border-right:1px solid var(--border)}
-.crit-cell:last-child{border-right:none}
-.crit-lbl{font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:3px}
-.cv-ok{color:var(--green);font-weight:500;font-size:13px}
-.cv-mid{color:var(--amber);font-weight:500;font-size:13px}
-.cv-bad{color:var(--red);font-weight:500;font-size:13px}
-.eval-body{padding:1.25rem;display:flex;flex-direction:column;gap:14px}
-.ev-t{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:500;margin-bottom:7px}
-.ev-ok{color:var(--green)} .ev-warn{color:var(--amber)} .ev-info{color:var(--accent2)}
-.ev-block ul{list-style:none;display:flex;flex-direction:column;gap:5px}
-.ev-block ul li{font-size:13px;color:var(--text2);padding-left:14px;position:relative;line-height:1.55}
-.ev-block ul li::before{content:"—";position:absolute;left:0;color:var(--text3)}
-.ev-sep{height:1px;background:var(--border)}
-
-.submit-box{margin-top:1.5rem;padding:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:10px}
-.submit-box p{font-size:14px;color:var(--text2);margin-bottom:12px;line-height:1.6}
-
-.sent-box{text-align:center;padding:2.5rem 1rem;background:var(--green-bg);border:1px solid var(--green-dim);border-radius:10px;margin-top:1rem}
-.sent-box .big{font-size:36px;font-weight:500;color:var(--green);font-family:var(--mono);margin-bottom:8px}
-.sent-box p{font-size:14px;color:#86efac}
-
-.result-screen{text-align:center;padding:2.5rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:1rem}
 .result-pct{font-family:var(--mono);font-size:64px;font-weight:500;line-height:1;margin-bottom:6px}
-.result-pct.good{color:var(--green)} .result-pct.mid{color:var(--amber)} .result-pct.low{color:var(--red)}
+.result-pct.good{color:var(--green)}.result-pct.mid{color:var(--amber)}.result-pct.low{color:var(--red)}
 .review-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--border);font-size:13px;color:var(--text2);text-align:left}
 .rdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-
 .sec-lbl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
-
-@media(max-width:600px){
-  h1{font-size:20px} .result-pct{font-size:48px}
-  pre.cb{font-size:11px;padding:14px 16px} textarea{font-size:12px}
-  .crit-grid{grid-template-columns:1fr 1fr} .score-big{font-size:38px}
-}
+@media(max-width:600px){h1{font-size:20px}.result-pct{font-size:48px}pre.cb{font-size:11px}textarea{font-size:12px}}
 </style>
 </head>
 <body>
@@ -153,11 +93,11 @@ textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba
         <span class="badge b-green">2 etapas</span>
       </div>
       <h1>Prueba <span>técnica</span></h1>
-      <p class="subtitle">8 preguntas teóricas + ejercicio de desarrollo con evaluación automática</p>
+      <p class="subtitle">8 preguntas teóricas + ejercicio de desarrollo</p>
     </div>
   </div>
   <div class="card">
-    <p style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:1.25rem">Ingresa tu nombre antes de comenzar. Al finalizar, tu resultado se guardará automáticamente para que el entrevistador pueda revisarlo.</p>
+    <p style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:1.25rem">Ingresa tu nombre antes de comenzar. Tu resultado se guardará al finalizar para que el entrevistador pueda revisarlo.</p>
     <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">Nombre completo</label>
     <input type="text" id="inp-name" placeholder="Ej: Juan Pérez" autocomplete="off" style="margin-bottom:1rem">
     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
@@ -178,7 +118,6 @@ textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba
       <span id="t-score-hdr" style="font-size:18px;color:var(--accent2)">0/0</span><br>correctas
     </div>
   </div>
-
   <div class="tabs">
     <button class="tab active" id="tab1" onclick="goTab(1)"><div class="tnum">1</div>Preguntas teóricas</button>
     <button class="tab" id="tab2" onclick="goTab(2)"><div class="tnum">2</div>Desarrollo práctico</button>
@@ -213,9 +152,8 @@ textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba
     </div>
 
     <div class="sec-lbl">Datos de entrada</div>
-    <div style="position:relative">
-      <button class="copy-btn" onclick="copyData(this)">copiar</button>
-<pre class="cb">import pandas as pd
+    <button class="copy-btn" onclick="copyData(this)">copiar</button>
+    <pre class="cb" id="data-pre">import pandas as pd
 
 ventas_raw = [
   {"id_venta": 1, "fecha": "2024-01-15", "sku": "A001", "cantidad": 3,    "precio_unitario": 150.0, "tienda": "T01"},
@@ -229,19 +167,18 @@ ventas_raw = [
 
 catalogo = [
   {"sku": "A001", "nombre_producto": "Camisa Slim",    "categoria": "Ropa"},
-  {"sku": "B002", "nombre_producto": "Pantalón Cargo", "categoria": "Ropa"},
-  {"sku": "C003", "nombre_producto": "Cinturón Cuero", "categoria": "Accesorios"},
+  {"sku": "B002", "nombre_producto": "Pantalon Cargo", "categoria": "Ropa"},
+  {"sku": "C003", "nombre_producto": "Cinturon Cuero", "categoria": "Accesorios"},
 ]</pre>
-    </div>
 
     <div class="sec-lbl">Tareas requeridas</div>
     <div class="task-list">
       <div class="task-row"><span class="ttag tt-ex">EXTRACT</span><span>Carga ambas fuentes en DataFrames de pandas.</span></div>
-      <div class="task-row"><span class="ttag tt-tr">TRANSFORM</span><span>Detecta y separa registros inválidos: SKU nulo, cantidad nula o negativa, precio negativo, fecha no parseable. Guárdalos en un DataFrame de rechazados con columna <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">motivo_rechazo</code>.</span></div>
-      <div class="task-row"><span class="ttag tt-tr">ENRIQUECER</span><span>LEFT JOIN con catálogo → agregar <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">nombre_producto</code> y <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">categoria</code>. Calcular <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">total_venta = cantidad × precio_unitario</code>.</span></div>
+      <div class="task-row"><span class="ttag tt-tr">TRANSFORM</span><span>Detecta y separa registros invalidos: SKU nulo, cantidad nula o negativa, precio negativo, fecha no parseable. Guardalos en un DataFrame de rechazados con columna <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">motivo_rechazo</code>.</span></div>
+      <div class="task-row"><span class="ttag tt-tr">ENRIQUECER</span><span>LEFT JOIN con catalogo para agregar <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">nombre_producto</code> y <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">categoria</code>. Calcular <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">total_venta = cantidad x precio_unitario</code>.</span></div>
       <div class="task-row"><span class="ttag tt-tr">AGREGAR</span><span>Resumen diario por <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">fecha</code> y <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">categoria</code>: conteo de ventas y monto total.</span></div>
       <div class="task-row"><span class="ttag tt-lo">LOAD</span><span>Imprime en consola el DataFrame limpio, el resumen y el log de rechazados con etiquetas claras.</span></div>
-      <div class="task-row"><span class="ttag tt-bo">BONUS</span><span>Encapsula cada fase en funciones. Agrega <code style="font-family:var(--mono);font-size:12px;color:var(--amber);background:var(--amber-bg);padding:1px 5px;border-radius:3px">try/except</code> con logging en transformación.</span></div>
+      <div class="task-row"><span class="ttag tt-bo">BONUS</span><span>Encapsula cada fase en funciones. Agrega <code style="font-family:var(--mono);font-size:12px;color:var(--amber);background:var(--amber-bg);padding:1px 5px;border-radius:3px">try/except</code> con logging en transformacion.</span></div>
     </div>
 
     <div class="sec-lbl">Tu solución</div>
@@ -262,25 +199,19 @@ if __name__ == '__main__':
     load(df_clean, df_resumen, df_rechazados)
 "></textarea>
 
-    <div id="eval-area" style="margin-top:1rem"></div>
-
     <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:1rem;flex-wrap:wrap">
-      <button class="ghost" onclick="clearCode()">Limpiar</button>
-      <button class="primary" id="btn-eval" onclick="runEval()">Evaluar con IA →</button>
+      <button onclick="clearCode()">Limpiar</button>
+      <button class="primary" id="btn-submit" onclick="submitResult()">Enviar resultado →</button>
     </div>
 
-    <div id="submit-box" style="display:none;margin-top:1.5rem">
-      <div class="submit-box">
-        <p>La evaluación está lista. Cuando estés conforme, envía tu resultado para que el entrevistador pueda revisarlo.</p>
-        <button class="primary" id="btn-submit" onclick="submitResult()">Enviar resultado →</button>
-      </div>
+    <div id="sending-box" style="display:none;margin-top:1rem;text-align:center;padding:1.5rem;background:var(--surface);border:1px solid var(--border);border-radius:10px">
+      <div class="spinner"></div>
+      <div style="font-size:13px;color:var(--text3);font-family:var(--mono)">Guardando resultado...</div>
     </div>
 
-    <div id="sent-box" style="display:none">
-      <div class="sent-box">
-        <div class="big">Enviado</div>
-        <p>Tu resultado fue guardado correctamente. El entrevistador podrá revisarlo.</p>
-      </div>
+    <div id="sent-box" style="display:none;margin-top:1rem;text-align:center;padding:2rem;background:var(--green-bg);border:1px solid var(--green-dim);border-radius:10px">
+      <div style="font-size:32px;font-weight:500;color:var(--green);font-family:var(--mono);margin-bottom:8px">Enviado</div>
+      <p style="font-size:14px;color:#86efac">Tu resultado fue guardado correctamente. El entrevistador podra revisarlo.</p>
     </div>
   </div>
 </div>
@@ -294,73 +225,34 @@ if __name__ == '__main__':
     </div>
   </div>
   <div class="card" style="text-align:center;padding:2rem">
-    <div style="font-size:48px;font-weight:500;font-family:var(--mono);color:var(--green);margin-bottom:8px">✓</div>
+    <div style="font-size:48px;font-weight:500;font-family:var(--mono);color:var(--green);margin-bottom:10px">&#10003;</div>
     <p style="font-size:15px;color:var(--text);font-weight:500;margin-bottom:6px" id="done-name"></p>
-    <p style="font-size:14px;color:var(--text2)">Tu resultado fue guardado. Puedes cerrar esta ventana.</p>
-    <div id="done-scores" style="display:flex;gap:16px;justify-content:center;margin-top:1.5rem;flex-wrap:wrap"></div>
+    <p style="font-size:14px;color:var(--text2);margin-bottom:1.5rem">Tu resultado fue guardado. Puedes cerrar esta ventana.</p>
+    <div id="done-score" style="display:inline-block;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem 2rem">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:4px">PREGUNTAS TEORICAS</div>
+      <div style="font-family:var(--mono);font-size:36px;font-weight:500" id="done-pct"></div>
+    </div>
   </div>
 </div>
 
-</div><!-- /shell -->
-
+</div>
 <script>
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxbcoln38hdwH43X-UwtJLa_pPOyO2cnphjwSWezZCgPbiPFWYNFtT3mNol7TW-NCLbfg/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyQzsJ-KRWv4D0rZuGHJaacu-gOyJSJsJFswpPoonT-dxjIjjHLDUD6bBZrKiaVANbnpg/exec';
 
-const QS = [
-  {
-    q:"¿Qué significa ETL y cuál es el orden correcto de sus fases?",
-    opts:["Extract → Transform → Load","Transform → Extract → Load","Extract → Load → Transform","Load → Extract → Transform"],
-    ans:0,
-    exp:"ETL es Extract (extraer datos de la fuente), Transform (limpiar y enriquecer) y Load (cargar al destino). El orden importa: no puedes transformar lo que no extrajiste."
-  },
-  {
-    q:"¿Cuál es la diferencia principal entre ETL y ELT?",
-    opts:["No hay diferencia, son sinónimos","En ELT los datos se cargan primero al destino y las transformaciones ocurren ahí","ETL es para datos estructurados, ELT solo para no estructurados","ETL usa Python, ELT usa SQL exclusivamente"],
-    ans:1,
-    exp:"En ELT los datos crudos se cargan primero al data warehouse (BigQuery, Snowflake) y las transformaciones se ejecutan dentro del motor. Es el patrón dominante en arquitecturas modernas."
-  },
-  {
-    q:"¿Qué parámetro de `pd.read_csv()` usarías para procesar un archivo por bloques sin cargar todo en memoria?",
-    opts:["`low_memory=True`","`chunksize=N`","`nrows=N`","`usecols=[...]`"],
-    ans:1,
-    exp:"`chunksize=N` retorna un iterador de DataFrames de N filas, ideal para archivos grandes. `nrows` solo lee las primeras N filas. `usecols` filtra columnas pero carga todo el archivo."
-  },
-  {
-    q:"¿Qué hace `df.dropna(subset=['precio','sku'], inplace=True)`?",
-    opts:["Elimina las columnas precio y sku","Rellena los nulos con 0","Elimina filas donde precio O sku sean nulos","Elimina filas solo si ambas columnas son nulas a la vez"],
-    ans:2,
-    exp:"`dropna(subset=[...])` con `how='any'` (por defecto) elimina filas donde cualquiera del subset tenga nulo. Para requerir que todas sean nulas se usa `how='all'`."
-  },
-  {
-    q:"¿Qué es la idempotencia en un pipeline ETL?",
-    opts:["La capacidad de correr en paralelo","Que ejecutar el pipeline N veces produce el mismo resultado que ejecutarlo 1 vez","Que procesa exactamente 1 fila por vez","Que no tiene dependencias externas"],
-    ans:1,
-    exp:"Un pipeline idempotente puede re-ejecutarse sin duplicar ni corromper datos. Es crítico para recuperación ante fallos: si el job cae a la mitad y lo reejecutas, el estado final debe ser correcto."
-  },
-  {
-    q:"¿Qué describe mejor la diferencia entre full load y carga incremental?",
-    opts:["La incremental siempre es más lenta","Full load trunca y recarga toda la tabla; la incremental solo procesa registros nuevos o modificados","Son equivalentes en rendimiento","La incremental no requiere timestamp ni ID"],
-    ans:1,
-    exp:"Full load: TRUNCATE + INSERT de toda la fuente. Incremental: usa una marca de agua (timestamp, ID) para procesar solo los deltas. La incremental es más eficiente pero requiere lógica adicional."
-  },
-  {
-    q:"¿Qué problema resuelve usar `try/except` con logging en la fase de transformación?",
-    opts:["Hace el código más rápido","Permite continuar el pipeline registrando los registros problemáticos sin abortar todo el proceso","Convierte tipos de datos automáticamente","Comprime los datos de salida"],
-    ans:1,
-    exp:"Sin manejo de errores, un registro malformado puede tirar todo el pipeline. Con try/except + logging puedes separar los registros fallidos, continuar con los válidos y tener trazabilidad."
-  },
-  {
-    q:"¿Qué hace `df.merge(df2, on='id', how='left')`?",
-    opts:["Une solo los IDs que existen en ambos DataFrames","Mantiene todos los registros de df y agrega columnas de df2 donde hay coincidencia de id","Une y elimina duplicados automáticamente","Apila filas de ambos DataFrames (UNION)"],
-    ans:1,
-    exp:"Equivale a un LEFT JOIN en SQL. Todos los registros de df (izquierda) se conservan; los de df2 se agregan donde el id coincide. Sin match en df2 las columnas quedan NaN."
-  }
+const QS=[
+  {q:"Que significa ETL y cual es el orden correcto de sus fases?",opts:["Extract -> Transform -> Load","Transform -> Extract -> Load","Extract -> Load -> Transform","Load -> Extract -> Transform"],ans:0,exp:"ETL es Extract (extraer datos), Transform (limpiar y enriquecer) y Load (cargar al destino). El orden importa: no puedes transformar lo que no extrajiste."},
+  {q:"Cual es la diferencia principal entre ETL y ELT?",opts:["No hay diferencia, son sinonimos","En ELT los datos se cargan primero al destino y las transformaciones ocurren ahi","ETL es para datos estructurados, ELT solo para no estructurados","ETL usa Python, ELT usa SQL exclusivamente"],ans:1,exp:"En ELT los datos crudos se cargan primero al data warehouse (BigQuery, Snowflake) y las transformaciones se ejecutan dentro del motor. Es el patron dominante en arquitecturas modernas."},
+  {q:"Que parametro de pd.read_csv() usarias para procesar un archivo por bloques sin cargar todo en memoria?",opts:["low_memory=True","chunksize=N","nrows=N","usecols=[...]"],ans:1,exp:"chunksize=N retorna un iterador de DataFrames de N filas, ideal para archivos grandes. nrows solo lee las primeras N filas. usecols filtra columnas pero carga todo."},
+  {q:"Que hace df.dropna(subset=['precio','sku'], inplace=True)?",opts:["Elimina las columnas precio y sku","Rellena los nulos con 0","Elimina filas donde precio O sku sean nulos","Elimina filas solo si ambas columnas son nulas a la vez"],ans:2,exp:"dropna(subset=[...]) con how='any' (por defecto) elimina filas donde cualquiera del subset tenga nulo. Para requerir que todas sean nulas se usa how='all'."},
+  {q:"Que es la idempotencia en un pipeline ETL?",opts:["La capacidad de correr en paralelo","Que ejecutar el pipeline N veces produce el mismo resultado que ejecutarlo 1 vez","Que procesa exactamente 1 fila por vez","Que no tiene dependencias externas"],ans:1,exp:"Un pipeline idempotente puede re-ejecutarse sin duplicar ni corromper datos. Es critico para recuperacion ante fallos: si el job cae a la mitad y lo reejecutas, el estado final debe ser correcto."},
+  {q:"Que describe mejor la diferencia entre full load y carga incremental?",opts:["La incremental siempre es mas lenta","Full load trunca y recarga toda la tabla; la incremental solo procesa registros nuevos o modificados","Son equivalentes en rendimiento","La incremental no requiere timestamp ni ID"],ans:1,exp:"Full load: TRUNCATE + INSERT de toda la fuente. Incremental: usa una marca de agua (timestamp, ID) para procesar solo los deltas. La incremental es mas eficiente pero requiere logica adicional."},
+  {q:"Que problema resuelve usar try/except con logging en la fase de transformacion?",opts:["Hace el codigo mas rapido","Permite continuar el pipeline registrando los registros problematicos sin abortar todo el proceso","Convierte tipos de datos automaticamente","Comprime los datos de salida"],ans:1,exp:"Sin manejo de errores, un registro malformado puede tirar todo el pipeline. Con try/except + logging puedes separar los registros fallidos, continuar con los validos y tener trazabilidad."},
+  {q:"Que hace df.merge(df2, on='id', how='left')?",opts:["Une solo los IDs que existen en ambos DataFrames","Mantiene todos los registros de df y agrega columnas de df2 donde hay coincidencia de id","Une y elimina duplicados automaticamente","Apila filas de ambos DataFrames (UNION)"],ans:1,exp:"Equivale a un LEFT JOIN en SQL. Todos los registros de df (izquierda) se conservan; los de df2 se agregan donde el id coincide. Sin match en df2 las columnas quedan NaN."}
 ];
 
-let candidateName='', cur=0;
+let candidateName='',cur=0;
 let userAns=new Array(QS.length).fill(null);
 let locked=new Array(QS.length).fill(false);
-let evalData=null;
 
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0);}
 
@@ -369,8 +261,7 @@ function startTest(){
   if(!n){alert('Por favor ingresa tu nombre completo.');return;}
   candidateName=n;
   document.getElementById('t-name-hdr').textContent=n;
-  show('s-test');
-  renderQ();
+  show('s-test');renderQ();
 }
 
 function goTab(n){
@@ -380,31 +271,24 @@ function goTab(n){
 }
 
 function renderQ(){
-  const q=QS[cur], isL=locked[cur], sel=userAns[cur];
-  document.getElementById('q-lbl').textContent=`PREGUNTA ${cur+1} / ${QS.length}`;
-  document.getElementById('q-bar').style.width=`${((cur+1)/QS.length)*100}%`;
+  const q=QS[cur],isL=locked[cur],sel=userAns[cur];
+  document.getElementById('q-lbl').textContent='PREGUNTA '+(cur+1)+' / '+QS.length;
+  document.getElementById('q-bar').style.width=(((cur+1)/QS.length)*100)+'%';
   document.getElementById('btn-prev').disabled=cur===0;
-  document.getElementById('btn-next').textContent=cur===QS.length-1?'Ver resultado →':'Siguiente →';
-  document.getElementById('q-st').textContent=isL?(sel===q.ans?'✓ correcta':'✗ incorrecta'):'sin responder';
+  document.getElementById('btn-next').textContent=cur===QS.length-1?'Ver resultado ->':'Siguiente ->';
+  document.getElementById('q-st').textContent=isL?(sel===q.ans?'correcta':'incorrecta'):'sin responder';
   const c=userAns.filter((a,i)=>a===QS[i].ans).length;
   const l=locked.filter(Boolean).length;
-  document.getElementById('q-sc').textContent=l?`${c} / ${l} correctas`:'';
-  document.getElementById('t-score-hdr').textContent=`${c}/${l}`;
-
+  document.getElementById('q-sc').textContent=l?(c+' / '+l+' correctas'):'';
+  document.getElementById('t-score-hdr').textContent=c+'/'+l;
   const optsH=q.opts.map((o,i)=>{
     let cls='opt';
     if(isL){if(i===q.ans)cls+=' ok';else if(i===sel)cls+=' bad';}
     else if(i===sel)cls+=' sel';
-    return `<button class="${cls}"${isL?' disabled':''} onclick="pick(${i})"><span class="okey">${'ABCD'[i]}</span><span>${o.replace(/`([^`]+)`/g,'<code>$1</code>')}</span></button>`;
+    return '<button class="'+cls+'"'+(isL?' disabled':'')+' onclick="pick('+i+')"><span class="okey">'+('ABCD'[i])+'</span><span>'+o+'</span></button>';
   }).join('');
-
-  const fbH=isL?`<div class="fb ${sel===q.ans?'ok':'bad'}">${sel===q.ans?'Correcto. ':'Incorrecto. '}${q.exp}</div>`:'';
-
-  document.getElementById('q-box').innerHTML=`<div class="card" style="margin-bottom:0">
-    <div class="q-num">PREGUNTA ${cur+1} — CONCEPTOS ETL</div>
-    <div class="q-text">${q.q.replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\n/g,'<br>')}</div>
-    <div class="opts">${optsH}</div>${fbH}
-  </div>`;
+  const fbH=isL?('<div class="fb '+(sel===q.ans?'ok':'bad')+'">'+(sel===q.ans?'Correcto. ':'Incorrecto. ')+q.exp+'</div>'):'';
+  document.getElementById('q-box').innerHTML='<div class="card" style="margin-bottom:0"><div class="q-num">PREGUNTA '+(cur+1)+'</div><div class="q-text">'+q.q+'</div><div class="opts">'+optsH+'</div>'+fbH+'</div>';
 }
 
 function pick(i){if(locked[cur])return;userAns[cur]=i;locked[cur]=true;renderQ();}
@@ -415,153 +299,61 @@ function showQ1Result(){
   const correct=userAns.filter((a,i)=>a===QS[i].ans).length;
   const pct=Math.round((correct/QS.length)*100);
   const cls=pct>=75?'good':pct>=50?'mid':'low';
-  const msg=pct>=75?'Buen resultado. Continúa al ejercicio de desarrollo.':pct>=50?'Resultado aceptable. Revisa los conceptos fallidos.':'Refuerza los fundamentos ETL antes de continuar.';
-  const rows=QS.map((q,i)=>`<div class="review-item"><div class="rdot" style="background:${userAns[i]===q.ans?'var(--green)':'var(--border2)'}"></div><span>${i+1}. ${q.q.split('\n')[0].substring(0,62)}${q.q.length>62?'…':''}</span></div>`).join('');
-
-  document.getElementById('q-box').innerHTML=`<div class="card" style="text-align:center;margin-bottom:0">
-    <div class="result-pct ${cls}">${pct}%</div>
-    <div style="font-size:14px;color:var(--text2);margin-bottom:4px">${correct} de ${QS.length} correctas</div>
-    <div style="font-size:13px;color:var(--text3);margin-bottom:1.25rem">${msg}</div>
-    <div style="text-align:left">${rows}</div>
-  </div>`;
-
+  const msg=pct>=75?'Buen resultado. Continua al ejercicio de desarrollo.':pct>=50?'Resultado aceptable. Revisa los conceptos fallidos.':'Refuerza los fundamentos ETL antes de continuar.';
+  const rows=QS.map((q,i)=>'<div class="review-item"><div class="rdot" style="background:'+(userAns[i]===q.ans?'var(--green)':'var(--border2)')+'"></div><span>'+(i+1)+'. '+q.q.substring(0,62)+(q.q.length>62?'...':'')+'</span></div>').join('');
+  document.getElementById('q-box').innerHTML='<div class="card" style="text-align:center;margin-bottom:0"><div class="result-pct '+cls+'">'+pct+'%</div><div style="font-size:14px;color:var(--text2);margin-bottom:4px">'+correct+' de '+QS.length+' correctas</div><div style="font-size:13px;color:var(--text3);margin-bottom:1.25rem">'+msg+'</div><div style="text-align:left">'+rows+'</div></div>';
   document.getElementById('q-lbl').textContent='RESULTADO ETAPA 1';
   document.getElementById('q-st').textContent='';
   document.getElementById('q-bar').style.width='100%';
   document.getElementById('btn-prev').style.display='none';
-  document.getElementById('btn-next').textContent='Ir al ejercicio →';
-  document.getElementById('btn-next').onclick=()=>goTab(2);
+  document.getElementById('btn-next').textContent='Ir al ejercicio ->';
+  document.getElementById('btn-next').onclick=function(){goTab(2);};
 }
 
-function clearCode(){if(confirm('¿Limpiar el editor?'))document.getElementById('dev-code').value='';}
+function clearCode(){if(confirm('Limpiar el editor?'))document.getElementById('dev-code').value='';}
 
 function copyData(btn){
-  const txt=document.querySelector('pre.cb').textContent;
-  navigator.clipboard.writeText(txt).then(()=>{btn.textContent='✓ copiado';setTimeout(()=>btn.textContent='copiar',1800);});
-}
-
-const lmsgs=['Leyendo el código...','Verificando fases ETL...','Revisando transformaciones...','Evaluando manejo de errores...','Calculando puntaje...','Preparando feedback...'];
-
-async function runEval(){
-  const code=document.getElementById('dev-code').value.trim();
-  if(!code){alert('Escribe tu solución antes de evaluar.');return;}
-  const area=document.getElementById('eval-area');
-  const btn=document.getElementById('btn-eval');
-  btn.disabled=true;btn.textContent='Evaluando...';
-  area.innerHTML=`<div style="padding:2rem;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:10px"><div class="spinner"></div><div id="lm" style="font-size:13px;color:var(--text3);font-family:var(--mono)">Analizando código...</div></div>`;
-
-  let mi=0;
-  const iv=setInterval(()=>{const el=document.getElementById('lm');if(el)el.textContent=lmsgs[mi++%lmsgs.length];},1300);
-
-  const prompt=`Eres un evaluador técnico experto en Python y ETL. Evalúa esta solución de forma justa pero exigente.
-
-EJERCICIO: Pipeline ETL con pandas. Se pedía:
-1. EXTRACT: cargar ventas_raw y catalogo en DataFrames
-2. TRANSFORM-LIMPIEZA: separar inválidos (SKU nulo, cantidad nula/negativa, precio negativo, fecha no parseable) en DataFrame rechazados con columna motivo_rechazo
-3. TRANSFORM-ENRIQUECIMIENTO: LEFT JOIN con catálogo, calcular total_venta = cantidad * precio_unitario
-4. TRANSFORM-AGREGACIÓN: resumen diario por fecha y categoria
-5. LOAD: imprimir resultados con etiquetas claras
-6. BONUS: funciones por fase + try/except
-
-SOLUCIÓN:
-\`\`\`python
-${code}
-\`\`\`
-
-Responde SOLO JSON sin texto extra ni backticks:
-{"puntaje":<0-100>,"nivel":"<Insuficiente|Básico|Aceptable|Bueno|Excelente>","resumen":"<2-3 oraciones>","criterios":{"extract":"<Completo|Parcial|Ausente>","transformacion":"<Completo|Parcial|Ausente>","enriquecimiento":"<Completo|Parcial|Ausente>","agregacion":"<Completo|Parcial|Ausente>","load":"<Completo|Parcial|Ausente>","manejo_errores":"<Completo|Parcial|Ausente>","estructura":"<Completo|Parcial|Ausente>"},"bien_implementado":["..."],"falta_o_incompleto":["..."],"sugerencias":["..."],"recomendacion":"<Rechazar|Considerar con reservas|Recomendar|Recomendar fuertemente>"}`;
-
-  try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
-    clearInterval(iv);
-    if(!r.ok)throw new Error(`API error ${r.status}`);
-    const d=await r.json();
-    const raw=d.content.map(b=>b.text||'').join('').trim().replace(/```json|```/g,'').trim();
-    evalData=JSON.parse(raw);
-    area.innerHTML=buildEvalHTML(evalData);
-    document.getElementById('submit-box').style.display='block';
-    document.getElementById('submit-box').scrollIntoView({behavior:'smooth',block:'start'});
-  }catch(e){
-    clearInterval(iv);
-    area.innerHTML=`<div style="background:var(--red-bg);border:1px solid #4d1010;border-radius:10px;padding:14px 16px;font-size:13px;color:#fca5a5">Error al evaluar: ${e.message}. Intenta de nuevo.</div>`;
-  }finally{
-    btn.disabled=false;btn.textContent='Evaluar con IA →';
-  }
-}
-
-function critCls(v){return v==='Completo'?'cv-ok':v==='Parcial'?'cv-mid':'cv-bad';}
-
-function buildEvalHTML(ev){
-  const sc=ev.puntaje;
-  const col=sc>=75?'var(--green)':sc>=50?'var(--amber)':'var(--red)';
-  const cr=ev.criterios;
-  const labels={extract:'Extract',transformacion:'Transform',enriquecimiento:'Join/Enriq.',agregacion:'Agregación',load:'Load',manejo_errores:'Errores',estructura:'Estructura'};
-  const crH=Object.entries(labels).map(([k,l])=>`<div class="crit-cell"><div class="crit-lbl">${l}</div><div class="${critCls(cr[k])}">${cr[k]}</div></div>`).join('');
-  const li=arr=>arr.length?`<ul>${arr.map(i=>`<li>${i}</li>`).join('')}</ul>`:`<span style="font-size:13px;color:var(--text3)">—</span>`;
-  const recCls=ev.recomendacion.includes('fuertemente')||ev.recomendacion==='Recomendar'?'cv-ok':ev.recomendacion.includes('reservas')?'cv-mid':'cv-bad';
-
-  return `<div class="eval-card">
-    <div class="eval-top">
-      <div class="score-big" style="color:${col}">${sc}<span style="font-size:22px;color:var(--text3)">/100</span></div>
-      <div style="flex:1;font-size:14px;color:var(--text2);line-height:1.65">
-        <strong style="color:var(--text);font-weight:500">${ev.nivel}</strong><br>${ev.resumen}<br>
-        <span style="font-family:var(--mono);font-size:11px">Recomendación: </span>
-        <span class="${recCls}" style="font-family:var(--mono);font-size:11px;font-weight:500">${ev.recomendacion}</span>
-      </div>
-    </div>
-    <div class="crit-grid">${crH}</div>
-    <div class="eval-body">
-      <div class="ev-block"><div class="ev-t ev-ok">bien implementado</div>${li(ev.bien_implementado)}</div>
-      <div class="ev-sep"></div>
-      <div class="ev-block"><div class="ev-t ev-warn">falta o incompleto</div>${li(ev.falta_o_incompleto)}</div>
-      <div class="ev-sep"></div>
-      <div class="ev-block"><div class="ev-t ev-info">sugerencias</div>${li(ev.sugerencias)}</div>
-    </div>
-  </div>`;
+  const txt=document.getElementById('data-pre').textContent;
+  navigator.clipboard.writeText(txt).then(function(){btn.textContent='copiado';setTimeout(function(){btn.textContent='copiar';},1800);});
 }
 
 async function submitResult(){
-  if(!evalData){alert('Primero evalúa tu solución con IA.');return;}
+  const code=document.getElementById('dev-code').value.trim();
+  if(!code){alert('Escribe tu solucion antes de enviar.');return;}
   const btn=document.getElementById('btn-submit');
-  btn.disabled=true;btn.textContent='Guardando...';
+  btn.disabled=true;
+  document.getElementById('sending-box').style.display='block';
 
-  const correct=userAns.filter((a,i)=>a===QS[i].ans).length;
+  const correct=userAns.filter(function(a,i){return a===QS[i].ans;}).length;
   const payload={
-    name: candidateName,
-    q1_correct: correct,
-    q1_total: QS.length,
-    q1_pct: Math.round((correct/QS.length)*100),
-    eval_puntaje: evalData.puntaje,
-    eval_nivel: evalData.nivel,
-    eval_recomendacion: evalData.recomendacion,
-    eval_resumen: evalData.resumen,
-    code: document.getElementById('dev-code').value
+    action:'save',
+    name:candidateName,
+    q1_correct:correct,
+    q1_total:QS.length,
+    q1_pct:Math.round((correct/QS.length)*100),
+    code:code
   };
 
   try{
-    await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    document.getElementById('submit-box').style.display='none';
+    await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)});
+    document.getElementById('sending-box').style.display='none';
     document.getElementById('sent-box').style.display='block';
-
-    setTimeout(()=>{
+    document.getElementById('btn-submit').style.display='none';
+    setTimeout(function(){
       document.getElementById('done-name').textContent=candidateName;
-      document.getElementById('done-scores').innerHTML=`
-        <div style="text-align:center">
-          <div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:4px">TEÓRICAS</div>
-          <div style="font-size:28px;font-weight:500;font-family:var(--mono);color:${correct/QS.length>=.75?'var(--green)':correct/QS.length>=.5?'var(--amber)':'var(--red)'}">${Math.round((correct/QS.length)*100)}%</div>
-        </div>
-        <div style="width:1px;background:var(--border);align-self:stretch"></div>
-        <div style="text-align:center">
-          <div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:4px">CÓDIGO</div>
-          <div style="font-size:28px;font-weight:500;font-family:var(--mono);color:${evalData.puntaje>=75?'var(--green)':evalData.puntaje>=50?'var(--amber)':'var(--red)'}">${evalData.puntaje}/100</div>
-        </div>`;
+      const col=correct/QS.length>=.75?'var(--green)':correct/QS.length>=.5?'var(--amber)':'var(--red)';
+      document.getElementById('done-pct').style.color=col;
+      document.getElementById('done-pct').textContent=Math.round((correct/QS.length)*100)+'%';
       show('s-done');
-    },1500);
+    },2000);
   }catch(e){
-    btn.disabled=false;btn.textContent='Enviar resultado →';
+    document.getElementById('sending-box').style.display='none';
+    btn.disabled=false;
     alert('Error al guardar: '+e.message+'. Intenta de nuevo.');
   }
 }
+
+renderQ();
 </script>
 </body>
 </html>
