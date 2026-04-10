@@ -6,897 +6,217 @@
 <title>Prueba Técnica — Python ETL</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0d0f12;
-    --surface: #14171c;
-    --surface2: #1c2028;
-    --border: #2a2f3a;
-    --border2: #3a4050;
-    --accent: #3b82f6;
-    --accent2: #60a5fa;
-    --green: #22c55e;
-    --green-dim: #166534;
-    --green-bg: #052e16;
-    --red: #ef4444;
-    --red-bg: #1c0606;
-    --amber: #f59e0b;
-    --amber-bg: #1c1000;
-    --text: #e8eaf0;
-    --text2: #8892a4;
-    --text3: #555e6e;
-    --mono: 'IBM Plex Mono', monospace;
-    --sans: 'IBM Plex Sans', sans-serif;
-  }
+:root {
+  --bg:#0d0f12; --surface:#14171c; --surface2:#1c2028;
+  --border:#2a2f3a; --border2:#3a4050;
+  --accent:#3b82f6; --accent2:#60a5fa;
+  --green:#22c55e; --green-dim:#166534; --green-bg:#052e16;
+  --red:#ef4444; --red-bg:#1c0606;
+  --amber:#f59e0b; --amber-bg:#1c1000;
+  --text:#e8eaf0; --text2:#8892a4; --text3:#555e6e;
+  --mono:'IBM Plex Mono',monospace;
+  --sans:'IBM Plex Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.6}
+.shell{max-width:860px;margin:0 auto;padding:40px 24px 80px}
+.screen{display:none}
+.screen.on{display:block}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+.hdr{border-bottom:1px solid var(--border);padding-bottom:24px;margin-bottom:28px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.badge{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:3px;border:1px solid}
+.b-blue{color:var(--accent2);border-color:#1e3a5f;background:#0a1929}
+.b-amber{color:var(--amber);border-color:#4a3000;background:var(--amber-bg)}
+.b-green{color:var(--green);border-color:var(--green-dim);background:var(--green-bg)}
+h1{font-size:26px;font-weight:600;color:var(--text);letter-spacing:-.02em;line-height:1.2}
+h1 span{color:var(--accent2)}
+.subtitle{font-size:14px;color:var(--text2);margin-top:6px}
 
-  body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    line-height: 1.6;
-  }
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1rem}
 
-  /* LAYOUT */
-  .shell {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 40px 24px 80px;
-  }
+input[type=text]{width:100%;padding:10px 14px;border:1px solid var(--border2);border-radius:7px;font-size:15px;background:var(--surface2);color:var(--text);font-family:var(--sans)}
+input[type=text]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(59,130,246,.15)}
 
-  /* HEADER */
-  .header {
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 24px;
-    margin-bottom: 32px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-  }
-  .header-left {}
-  .badge-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
-  }
-  .badge {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 3px 9px;
-    border-radius: 3px;
-    border: 1px solid;
-  }
-  .badge-blue { color: var(--accent2); border-color: #1e3a5f; background: #0a1929; }
-  .badge-amber { color: var(--amber); border-color: #4a3000; background: var(--amber-bg); }
-  .badge-green { color: var(--green); border-color: var(--green-dim); background: var(--green-bg); }
-  h1 {
-    font-size: 26px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-  }
-  h1 span { color: var(--accent2); }
-  .subtitle { font-size: 14px; color: var(--text2); margin-top: 6px; }
-  .score-chip {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--text2);
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 8px 14px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .score-chip .num { color: var(--accent2); font-size: 18px; font-weight: 500; display: block; }
+button{font-family:var(--sans);font-size:13px;font-weight:500;padding:9px 18px;border-radius:7px;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--text2);transition:all .12s}
+button:hover{background:var(--surface2);color:var(--text)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.primary:hover{background:#2563eb}
+button:disabled{opacity:.35;cursor:default}
+button.ghost{border-color:var(--border2);color:var(--text2)}
 
-  /* STAGE TABS */
-  .tabs {
-    display: flex;
-    gap: 0;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 28px;
-    background: var(--surface);
-  }
-  .tab {
-    flex: 1;
-    padding: 11px 16px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 400;
-    color: var(--text2);
-    background: transparent;
-    border: none;
-    border-right: 1px solid var(--border);
-    transition: all 0.15s;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: var(--sans);
-  }
-  .tab:last-child { border-right: none; }
-  .tab:hover { background: var(--surface2); color: var(--text); }
-  .tab.active { background: var(--surface2); color: var(--accent2); }
-  .tab-num {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    font-family: var(--mono);
-    font-size: 11px;
-    display: flex; align-items: center; justify-content: center;
-    border: 1px solid var(--border2);
-    color: var(--text3);
-    flex-shrink: 0;
-  }
-  .tab.active .tab-num { border-color: var(--accent); color: var(--accent2); background: #0a1929; }
+.tabs{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:1.5rem;background:var(--surface)}
+.tab{flex:1;padding:10px 16px;cursor:pointer;font-size:13px;color:var(--text2);background:transparent;border:none;border-right:1px solid var(--border);font-family:var(--sans);display:flex;align-items:center;gap:8px;transition:all .12s}
+.tab:last-child{border-right:none}
+.tab:hover{background:var(--surface2);color:var(--text)}
+.tab.active{background:var(--surface2);color:var(--accent2)}
+.tnum{width:20px;height:20px;border-radius:50%;border:1px solid var(--border2);font-size:11px;display:flex;align-items:center;justify-content:center;color:var(--text3);flex-shrink:0}
+.tab.active .tnum{border-color:var(--accent);color:var(--accent2);background:#0a1929}
 
-  /* PROGRESS */
-  .progress-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-  }
-  .progress-label { font-family: var(--mono); font-size: 11px; color: var(--text3); }
-  .progress-track {
-    height: 2px;
-    background: var(--border);
-    border-radius: 2px;
-    margin-bottom: 24px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 2px;
-    transition: width 0.4s ease;
-  }
+.prog-row{display:flex;justify-content:space-between;margin-bottom:6px}
+.prog-lbl{font-family:var(--mono);font-size:11px;color:var(--text3)}
+.prog-track{height:2px;background:var(--border);border-radius:2px;margin-bottom:1.25rem}
+.prog-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s}
 
-  /* QUESTION CARD */
-  .q-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 20px;
-    animation: fadeUp 0.2s ease;
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .q-top {
-    padding: 20px 24px 16px;
-    border-bottom: 1px solid var(--border);
-  }
-  .q-tag {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--text3);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .q-text {
-    font-size: 16px;
-    font-weight: 400;
-    color: var(--text);
-    line-height: 1.65;
-  }
-  .q-text code {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--accent2);
-    background: #0a1929;
-    border: 1px solid #1e3a5f;
-    padding: 1px 6px;
-    border-radius: 3px;
-  }
-  .options {
-    padding: 16px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .opt {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 11px 14px;
-    border: 1px solid var(--border);
-    border-radius: 7px;
-    cursor: pointer;
-    transition: all 0.12s;
-    background: transparent;
-    text-align: left;
-    font-family: var(--sans);
-    font-size: 14px;
-    color: var(--text);
-    width: 100%;
-  }
-  .opt:hover:not(:disabled) { border-color: var(--border2); background: var(--surface2); }
-  .opt.selected { border-color: var(--accent); background: #050e1f; }
-  .opt.correct { border-color: var(--green); background: var(--green-bg); }
-  .opt.wrong { border-color: var(--red); background: var(--red-bg); }
-  .opt:disabled { cursor: default; }
-  .opt-key {
-    font-family: var(--mono);
-    font-size: 11px;
-    width: 22px; height: 22px;
-    border-radius: 4px;
-    border: 1px solid var(--border2);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--text3);
-    flex-shrink: 0;
-    margin-top: 1px;
-    font-weight: 500;
-  }
-  .opt.correct .opt-key { border-color: var(--green); color: var(--green); background: var(--green-bg); }
-  .opt.wrong .opt-key { border-color: var(--red); color: var(--red); background: var(--red-bg); }
-  .opt.selected .opt-key { border-color: var(--accent); color: var(--accent2); background: #0a1929; }
+.q-num{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.q-text{font-size:15px;color:var(--text);line-height:1.65;margin-bottom:1rem}
+.q-text code{font-family:var(--mono);font-size:12px;color:var(--accent2);background:#0a1929;border:1px solid #1e3a5f;padding:1px 5px;border-radius:3px}
 
-  /* FEEDBACK */
-  .feedback {
-    margin: 4px 24px 16px;
-    padding: 12px 14px;
-    border-radius: 7px;
-    font-size: 13px;
-    line-height: 1.6;
-    display: none;
-    border: 1px solid;
-  }
-  .feedback.correct { display: block; color: #86efac; border-color: var(--green-dim); background: var(--green-bg); }
-  .feedback.wrong { display: block; color: #fca5a5; border-color: #4d1010; background: var(--red-bg); }
-  .feedback strong { font-weight: 500; }
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:7px;cursor:pointer;background:transparent;text-align:left;font-family:var(--sans);font-size:14px;color:var(--text);width:100%;transition:all .1s}
+.opt:hover:not(:disabled){border-color:var(--border2);background:var(--surface2)}
+.opt.sel{border-color:var(--accent);background:#050e1f}
+.opt.ok{border-color:var(--green);background:var(--green-bg)}
+.opt.bad{border-color:var(--red);background:var(--red-bg)}
+.opt:disabled{cursor:default}
+.okey{width:20px;height:20px;border-radius:4px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text3);flex-shrink:0;margin-top:1px;font-family:var(--mono)}
+.opt.ok .okey{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+.opt.bad .okey{border-color:var(--red);color:var(--red);background:var(--red-bg)}
+.opt.sel .okey{border-color:var(--accent);color:var(--accent2);background:#0a1929}
 
-  /* NAV */
-  .nav-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 24px;
-    gap: 12px;
-  }
-  .btn {
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 9px 20px;
-    border-radius: 7px;
-    cursor: pointer;
-    border: 1px solid var(--border2);
-    background: transparent;
-    color: var(--text2);
-    transition: all 0.12s;
-  }
-  .btn:hover { background: var(--surface2); color: var(--text); }
-  .btn-primary {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
-  .btn-primary:hover { background: #2563eb; }
-  .btn:disabled { opacity: 0.35; cursor: default; }
+.fb{font-size:13px;line-height:1.6;padding:10px 12px;border-radius:7px;margin-top:8px;border:1px solid}
+.fb.ok{background:var(--green-bg);color:#86efac;border-color:var(--green-dim)}
+.fb.bad{background:var(--red-bg);color:#fca5a5;border-color:#4d1010}
 
-  /* RESULT SCREEN */
-  .result-screen {
-    text-align: center;
-    padding: 48px 24px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    margin-bottom: 20px;
-    animation: fadeUp 0.3s ease;
-  }
-  .result-pct {
-    font-family: var(--mono);
-    font-size: 72px;
-    font-weight: 500;
-    line-height: 1;
-    margin-bottom: 8px;
-  }
-  .result-pct.good { color: var(--green); }
-  .result-pct.mid { color: var(--amber); }
-  .result-pct.low { color: var(--red); }
-  .result-sub { font-size: 15px; color: var(--text2); margin-bottom: 6px; }
-  .result-msg { font-size: 13px; color: var(--text3); }
-  .review-list { margin-top: 24px; text-align: left; }
-  .review-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 8px 0;
-    border-top: 1px solid var(--border);
-    font-size: 13px;
-    color: var(--text2);
-  }
-  .review-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.nav{display:flex;align-items:center;justify-content:space-between;margin-top:1.25rem}
+.score-info{font-family:var(--mono);font-size:11px;color:var(--text3)}
 
-  /* ── STAGE 2 ── */
-  .stage2 { display: none; }
-  .stage2.active { display: block; animation: fadeUp 0.2s ease; }
-  .stage1 { display: block; }
-  .stage1.hidden { display: none; }
+pre.cb{font-family:var(--mono);font-size:12px;line-height:1.7;background:#080b0f;border:1px solid var(--border);border-radius:10px;padding:1.25rem;overflow-x:auto;white-space:pre;color:#c9d3e0;margin-bottom:1rem;position:relative}
+.copy-btn{position:absolute;top:10px;right:12px;font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:4px;border:1px solid var(--border2);background:var(--surface2);color:var(--text3);cursor:pointer}
+.copy-btn:hover{color:var(--text);border-color:var(--accent)}
 
-  .section-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--text3);
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+.task-list{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:1rem}
+.task-row{display:flex;gap:12px;align-items:flex-start;padding:12px 16px;border-bottom:1px solid var(--border);font-size:14px;color:var(--text)}
+.task-row:last-child{border-bottom:none}
+.ttag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0;margin-top:2px;border:1px solid;font-family:var(--mono)}
+.tt-ex{color:#67e8f9;background:#042030;border-color:#164050}
+.tt-tr{color:#a78bfa;background:#0f0720;border-color:#2d1a50}
+.tt-lo{color:#fb923c;background:#1c0a00;border-color:#4d2000}
+.tt-bo{color:var(--amber);background:var(--amber-bg);border-color:#4a3000}
 
-  .info-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px 24px;
-    margin-bottom: 20px;
-    font-size: 14px;
-    color: var(--text2);
-    line-height: 1.7;
-  }
-  .info-card .tags { margin-top: 14px; display: flex; gap: 7px; flex-wrap: wrap; }
+textarea{width:100%;min-height:300px;font-family:var(--mono);font-size:13px;padding:1rem;border:1px solid var(--border);border-radius:10px;background:#080b0f;color:#c9d3e0;resize:vertical;line-height:1.6}
+textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(59,130,246,.12)}
 
-  pre.codeblock {
-    font-family: var(--mono);
-    font-size: 12.5px;
-    line-height: 1.7;
-    background: #080b0f;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px 24px;
-    overflow-x: auto;
-    color: #c9d3e0;
-    margin-bottom: 20px;
-    white-space: pre;
-  }
-  pre.codeblock .kw { color: #818cf8; }
-  pre.codeblock .fn { color: #60a5fa; }
-  pre.codeblock .str { color: #86efac; }
-  pre.codeblock .cm { color: #4b5a6e; font-style: italic; }
-  pre.codeblock .num { color: #fdba74; }
-  pre.codeblock .var { color: #e8eaf0; }
+.spinner{width:26px;height:26px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-  .task-list {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
-  .task-item {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-    color: var(--text);
-    line-height: 1.6;
-  }
-  .task-item:last-child { border-bottom: none; }
-  .task-tag {
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    min-width: 80px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    text-align: center;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .tag-extract { color: #67e8f9; background: #042030; border: 1px solid #164050; }
-  .tag-transform { color: #a78bfa; background: #0f0720; border: 1px solid #2d1a50; }
-  .tag-load { color: #fb923c; background: #1c0a00; border: 1px solid #4d2000; }
-  .tag-bonus { color: var(--amber); background: var(--amber-bg); border: 1px solid #4a3000; }
+.eval-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:1rem}
+.eval-top{display:flex;align-items:flex-start;gap:1.25rem;padding:1.25rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.score-big{font-family:var(--mono);font-size:52px;font-weight:500;line-height:1;flex-shrink:0}
+.crit-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));border-bottom:1px solid var(--border)}
+.crit-cell{padding:10px 14px;border-right:1px solid var(--border)}
+.crit-cell:last-child{border-right:none}
+.crit-lbl{font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:3px}
+.cv-ok{color:var(--green);font-weight:500;font-size:13px}
+.cv-mid{color:var(--amber);font-weight:500;font-size:13px}
+.cv-bad{color:var(--red);font-weight:500;font-size:13px}
+.eval-body{padding:1.25rem;display:flex;flex-direction:column;gap:14px}
+.ev-t{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:500;margin-bottom:7px}
+.ev-ok{color:var(--green)} .ev-warn{color:var(--amber)} .ev-info{color:var(--accent2)}
+.ev-block ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.ev-block ul li{font-size:13px;color:var(--text2);padding-left:14px;position:relative;line-height:1.55}
+.ev-block ul li::before{content:"—";position:absolute;left:0;color:var(--text3)}
+.ev-sep{height:1px;background:var(--border)}
 
-  .editor-wrap { position: relative; margin-bottom: 24px; }
-  .editor-label {
-    position: absolute;
-    top: 12px; right: 14px;
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--text3);
-    pointer-events: none;
-    z-index: 1;
-  }
-  textarea#dev-answer {
-    width: 100%;
-    min-height: 320px;
-    font-family: var(--mono);
-    font-size: 13px;
-    line-height: 1.7;
-    padding: 20px 24px;
-    background: #080b0f;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: #c9d3e0;
-    resize: vertical;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  textarea#dev-answer:focus { border-color: var(--accent); }
-  textarea#dev-answer::placeholder { color: var(--text3); }
+.submit-box{margin-top:1.5rem;padding:1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:10px}
+.submit-box p{font-size:14px;color:var(--text2);margin-bottom:12px;line-height:1.6}
 
-  .actions-row {
-    display: flex;
-    gap: 10px;
-    justify-content: flex-end;
-    flex-wrap: wrap;
-  }
-  .btn-ghost {
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 9px 18px;
-    border-radius: 7px;
-    cursor: pointer;
-    border: 1px solid var(--border2);
-    background: transparent;
-    color: var(--text2);
-    transition: all 0.12s;
-  }
-  .btn-ghost:hover { background: var(--surface2); color: var(--text); }
+.sent-box{text-align:center;padding:2.5rem 1rem;background:var(--green-bg);border:1px solid var(--green-dim);border-radius:10px;margin-top:1rem}
+.sent-box .big{font-size:36px;font-weight:500;color:var(--green);font-family:var(--mono);margin-bottom:8px}
+.sent-box p{font-size:14px;color:#86efac}
 
-  /* COPY BUTTON */
-  .copy-btn {
-    position: absolute;
-    top: 10px; right: 12px;
-    font-family: var(--mono);
-    font-size: 10px;
-    padding: 4px 10px;
-    border-radius: 4px;
-    border: 1px solid var(--border2);
-    background: var(--surface2);
-    color: var(--text3);
-    cursor: pointer;
-    transition: all 0.12s;
-  }
-  .copy-btn:hover { color: var(--text); border-color: var(--accent); }
-  .codeblock-wrap { position: relative; }
+.result-screen{text-align:center;padding:2.5rem 1.25rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:1rem}
+.result-pct{font-family:var(--mono);font-size:64px;font-weight:500;line-height:1;margin-bottom:6px}
+.result-pct.good{color:var(--green)} .result-pct.mid{color:var(--amber)} .result-pct.low{color:var(--red)}
+.review-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--border);font-size:13px;color:var(--text2);text-align:left}
+.rdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 
-  @keyframes spin { to { transform: rotate(360deg); } }
+.sec-lbl{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
 
-  .eval-section { margin-bottom: 16px; }
-  .eval-section-title {
-    font-family: var(--mono);
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text3);
-    margin-bottom: 10px;
-  }
-  .eval-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .eval-score-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--border);
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .score-big {
-    font-family: var(--mono);
-    font-size: 48px;
-    font-weight: 500;
-    line-height: 1;
-  }
-  .score-big.s-high { color: var(--green); }
-  .score-big.s-mid  { color: var(--amber); }
-  .score-big.s-low  { color: var(--red); }
-  .score-meta { font-size: 13px; color: var(--text2); line-height: 1.6; }
-  .score-meta strong { color: var(--text); font-weight: 500; }
-  .criteria-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .crit-item {
-    padding: 14px 18px;
-    border-right: 1px solid var(--border);
-    font-size: 13px;
-  }
-  .crit-item:last-child { border-right: none; }
-  .crit-label { color: var(--text3); font-size: 11px; font-family: var(--mono); margin-bottom: 4px; }
-  .crit-val { font-weight: 500; }
-  .crit-val.ok { color: var(--green); }
-  .crit-val.mid { color: var(--amber); }
-  .crit-val.bad { color: var(--red); }
-  .eval-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
-  .eval-block { font-size: 14px; line-height: 1.7; color: var(--text2); }
-  .eval-block-title {
-    font-size: 12px;
-    font-family: var(--mono);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-  }
-  .eval-block-title.good { color: var(--green); }
-  .eval-block-title.warn { color: var(--amber); }
-  .eval-block-title.info { color: var(--accent2); }
-  .eval-block ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 5px; }
-  .eval-block ul li { padding-left: 16px; position: relative; }
-  .eval-block ul li::before { content: '—'; position: absolute; left: 0; color: var(--text3); }
-  .eval-divider { height: 1px; background: var(--border); }
-
-  @media (max-width: 600px) {
-    .criteria-grid { grid-template-columns: 1fr 1fr; }
-    .score-big { font-size: 36px; }
-  }
+@media(max-width:600px){
+  h1{font-size:20px} .result-pct{font-size:48px}
+  pre.cb{font-size:11px;padding:14px 16px} textarea{font-size:12px}
+  .crit-grid{grid-template-columns:1fr 1fr} .score-big{font-size:38px}
+}
 </style>
 </head>
 <body>
 <div class="shell">
 
-  <!-- HEADER -->
-  <div class="header">
-    <div class="header-left">
-      <div class="badge-row">
-        <span class="badge badge-blue">Python ETL</span>
-        <span class="badge badge-amber">Junior · Mid</span>
-        <span class="badge badge-green">2 etapas</span>
+<!-- WELCOME -->
+<div id="s-welcome" class="screen on">
+  <div class="hdr">
+    <div>
+      <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+        <span class="badge b-blue">Python ETL</span>
+        <span class="badge b-amber">Data Engineering</span>
+        <span class="badge b-green">2 etapas</span>
       </div>
-      <h1>Prueba <span>Técnica</span></h1>
-      <p class="subtitle">Conceptos ETL · Pandas · Transformación de datos</p>
+      <h1>Prueba <span>técnica</span></h1>
+      <p class="subtitle">8 preguntas teóricas + ejercicio de desarrollo con evaluación automática</p>
     </div>
-    <div class="score-chip" id="score-chip">
-      <span class="num" id="chip-num">—</span>
-      puntos etapa 1
+  </div>
+  <div class="card">
+    <p style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:1.25rem">Ingresa tu nombre antes de comenzar. Al finalizar, tu resultado se guardará automáticamente para que el entrevistador pueda revisarlo.</p>
+    <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px">Nombre completo</label>
+    <input type="text" id="inp-name" placeholder="Ej: Juan Pérez" autocomplete="off" style="margin-bottom:1rem">
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <button class="primary" onclick="startTest()">Comenzar prueba →</button>
+      <span style="font-size:12px;color:var(--text3)">Duración estimada: 40 – 55 min</span>
+    </div>
+  </div>
+</div>
+
+<!-- TEST -->
+<div id="s-test" class="screen">
+  <div class="hdr">
+    <div>
+      <h1 id="t-name-hdr" style="font-size:20px">—</h1>
+      <p class="subtitle">Prueba técnica — Python ETL</p>
+    </div>
+    <div style="font-family:var(--mono);font-size:12px;color:var(--text3);text-align:right">
+      <span id="t-score-hdr" style="font-size:18px;color:var(--accent2)">0/0</span><br>correctas
     </div>
   </div>
 
-  <!-- TABS -->
   <div class="tabs">
-    <button class="tab active" onclick="goStage(1)">
-      <div class="tab-num">1</div>
-      Preguntas teóricas
-    </button>
-    <button class="tab" id="tab2" onclick="goStage(2)">
-      <div class="tab-num">2</div>
-      Desarrollo práctico
-    </button>
+    <button class="tab active" id="tab1" onclick="goTab(1)"><div class="tnum">1</div>Preguntas teóricas</button>
+    <button class="tab" id="tab2" onclick="goTab(2)"><div class="tnum">2</div>Desarrollo práctico</button>
   </div>
 
-  <!-- STAGE 1 -->
-  <div class="stage1" id="stage1">
-    <div class="progress-row">
-      <span class="progress-label" id="q-label">PREGUNTA 1 / 8</span>
-      <span class="progress-label" id="q-status">sin responder</span>
+  <!-- PANE 1 -->
+  <div id="pane1">
+    <div class="prog-row">
+      <span class="prog-lbl" id="q-lbl">PREGUNTA 1 / 8</span>
+      <span class="prog-lbl" id="q-st">sin responder</span>
     </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="q-bar" style="width:12.5%"></div>
-    </div>
-    <div id="q-container"></div>
-    <div class="nav-row">
-      <button class="btn" id="btn-prev" onclick="prevQ()" disabled>← Anterior</button>
-      <button class="btn btn-primary" id="btn-next" onclick="nextQ()">Siguiente →</button>
+    <div class="prog-track"><div class="prog-fill" id="q-bar" style="width:12.5%"></div></div>
+    <div id="q-box"></div>
+    <div class="nav">
+      <button id="btn-prev" onclick="prevQ()" disabled>← Anterior</button>
+      <span class="score-info" id="q-sc"></span>
+      <button class="primary" id="btn-next" onclick="nextQ()">Siguiente →</button>
     </div>
   </div>
 
-  <!-- STAGE 2 -->
-  <div class="stage2" id="stage2">
-    <div class="section-label">Contexto del ejercicio</div>
-    <div class="info-card">
-      Se te proporcionan datos de ventas de un sistema POS y un catálogo de productos (simulados como listas de diccionarios). Tu tarea es construir un pipeline ETL completo en Python usando <strong>pandas</strong>, respetando la separación Extract → Transform → Load.
-      <div class="tags">
-        <span class="badge badge-blue">pandas</span>
-        <span class="badge badge-blue">manejo de errores</span>
-        <span class="badge badge-blue">joins</span>
-        <span class="badge badge-blue">agregaciones</span>
-        <span class="badge badge-amber">30 – 45 min</span>
+  <!-- PANE 2 -->
+  <div id="pane2" style="display:none">
+    <div class="sec-lbl">Contexto</div>
+    <div class="card" style="font-size:14px;color:var(--text2);line-height:1.7">
+      Se te entregan datos de ventas con registros intencionalmente sucios y un catálogo de productos. Construye un pipeline ETL completo usando <strong style="color:var(--text);font-weight:500">pandas</strong>.
+      <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+        <span class="badge b-blue">pandas</span>
+        <span class="badge b-blue">joins</span>
+        <span class="badge b-blue">manejo de errores</span>
+        <span class="badge b-amber">30 – 45 min</span>
       </div>
     </div>
 
-    <div class="section-label">Datos de entrada</div>
-    <div class="codeblock-wrap">
-      <button class="copy-btn" onclick="copyCode()">copiar</button>
-<pre class="codeblock" id="data-block"><span class="kw">import</span> pandas <span class="kw">as</span> pd
+    <div class="sec-lbl">Datos de entrada</div>
+    <div style="position:relative">
+      <button class="copy-btn" onclick="copyData(this)">copiar</button>
+<pre class="cb">import pandas as pd
 
-<span class="cm"># Fuente 1: Ventas del sistema POS</span>
-<span class="var">ventas_raw</span> = [
-  {<span class="str">"id_venta"</span>: <span class="num">1</span>, <span class="str">"fecha"</span>: <span class="str">"2024-01-15"</span>, <span class="str">"sku"</span>: <span class="str">"A001"</span>, <span class="str">"cantidad"</span>: <span class="num">3</span>,    <span class="str">"precio_unitario"</span>: <span class="num">150.0</span>, <span class="str">"tienda"</span>: <span class="str">"T01"</span>},
-  {<span class="str">"id_venta"</span>: <span class="num">2</span>, <span class="str">"fecha"</span>: <span class="str">"2024-01-15"</span>, <span class="str">"sku"</span>: <span class="str">"B002"</span>, <span class="str">"cantidad"</span>: <span class="kw">None</span>,   <span class="str">"precio_unitario"</span>:  <span class="num">80.0</span>, <span class="str">"tienda"</span>: <span class="str">"T02"</span>},
-  {<span class="str">"id_venta"</span>: <span class="num">3</span>, <span class="str">"fecha"</span>: <span class="str">"2024-01-16"</span>, <span class="str">"sku"</span>: <span class="str">"A001"</span>, <span class="str">"cantidad"</span>: <span class="num">1</span>,    <span class="str">"precio_unitario"</span>: <span class="num">150.0</span>, <span class="str">"tienda"</span>: <span class="str">"T01"</span>},
-  {<span class="str">"id_venta"</span>: <span class="num">4</span>, <span class="str">"fecha"</span>: <span class="str">"2024-01-16"</span>, <span class="str">"sku"</span>: <span class="str">"C003"</span>, <span class="str">"cantidad"</span>: <span class="num">2</span>,    <span class="str">"precio_unitario"</span>: <span class="num">-50.0</span>, <span class="str">"tienda"</span>: <span class="str">"T03"</span>},
-  {<span class="str">"id_venta"</span>: <span class="num">5</span>, <span class="str">"fecha"</span>: <span class="str">"2024-01-17"</span>, <span class="str">"sku"</span>: <span class="kw">None</span>,   <span class="str">"cantidad"</span>: <span class="num">4</span>,    <span class="str">"precio_unitario"</span>: <span class="num">200.0</span>, <span class="str">"tienda"</span>: <span class="str">"T01"</span>},
-  {<span class="str">"id_venta"</span>: <span class="num">6</span>, <span class="str">"fecha"</span>: <span class="str">"2024-01-17"</span>, <span class="str">"sku"</span>: <span class="str">"B002"</span>, <span class="str">"cantidad"</span>: <span class="num">2</span>,    <span class="str">"precio_unitario"</span>:  <span class="num">80.0</span>, <span class="str">"tienda"</span>: <span class="str">"T02"</span>},
-  {<span class="str">"id_venta"</span>: <span class="num">7</span>, <span class="str">"fecha"</span>: <span class="str">"baddate"</span>,   <span class="str">"sku"</span>: <span class="str">"A001"</span>, <span class="str">"cantidad"</span>: <span class="num">1</span>,    <span class="str">"precio_unitario"</span>: <span class="num">150.0</span>, <span class="str">"tienda"</span>: <span class="str">"T01"</span>},
-]
-
-<span class="cm"># Fuente 2: Catálogo de productos</span>
-<span class="var">catalogo</span> = [
-  {<span class="str">"sku"</span>: <span class="str">"A001"</span>, <span class="str">"nombre_producto"</span>: <span class="str">"Camisa Slim"</span>,    <span class="str">"categoria"</span>: <span class="str">"Ropa"</span>},
-  {<span class="str">"sku"</span>: <span class="str">"B002"</span>, <span class="str">"nombre_producto"</span>: <span class="str">"Pantalón Cargo"</span>,  <span class="str">"categoria"</span>: <span class="str">"Ropa"</span>},
-  {<span class="str">"sku"</span>: <span class="str">"C003"</span>, <span class="str">"nombre_producto"</span>: <span class="str">"Cinturón Cuero"</span>, <span class="str">"categoria"</span>: <span class="str">"Accesorios"</span>},
-]</pre>
-    </div>
-
-    <div class="section-label">Tareas requeridas</div>
-    <div class="task-list">
-      <div class="task-item">
-        <span class="task-tag tag-extract">EXTRACT</span>
-        <span>Carga ambas fuentes en DataFrames de pandas.</span>
-      </div>
-      <div class="task-item">
-        <span class="task-tag tag-transform">TRANSFORM</span>
-        <span>Detecta y separa registros inválidos: SKU nulo, cantidad nula o negativa, precio negativo, fecha no parseable. Guárdalos en un DataFrame de rechazados con columna <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px;">motivo_rechazo</code>.</span>
-      </div>
-      <div class="task-item">
-        <span class="task-tag tag-transform">ENRIQUECER</span>
-        <span>Haz un LEFT JOIN con el catálogo para agregar <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px;">nombre_producto</code> y <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px;">categoria</code>. Calcula <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px;">total_venta = cantidad × precio_unitario</code>.</span>
-      </div>
-      <div class="task-item">
-        <span class="task-tag tag-transform">AGREGAR</span>
-        <span>Genera un resumen diario: total de ventas y monto total agrupado por <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px;">fecha</code> y <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px;">categoria</code>.</span>
-      </div>
-      <div class="task-item">
-        <span class="task-tag tag-load">LOAD</span>
-        <span>Simula la carga imprimiendo en consola: el DataFrame limpio, el resumen y el log de rechazados con etiquetas claras.</span>
-      </div>
-      <div class="task-item">
-        <span class="task-tag tag-bonus">BONUS</span>
-        <span>Encapsula cada fase en una función independiente. Agrega <code style="font-family:var(--mono);font-size:12px;color:#f59e0b;background:#1c1000;padding:1px 5px;border-radius:3px;">try/except</code> con logging en la fase de transformación.</span>
-      </div>
-    </div>
-
-    <div class="section-label">Tu solución</div>
-    <div class="editor-wrap">
-      <span class="editor-label">python</span>
-      <textarea id="dev-answer" spellcheck="false" placeholder="import pandas as pd
-
-# --- EXTRACT ---
-def extract():
-    # Tu código aquí
-    pass
-
-# --- TRANSFORM ---
-def transform(df_ventas, df_catalogo):
-    # Tu código aquí
-    pass
-
-# --- LOAD ---
-def load(df_clean, df_resumen, df_rechazados):
-    # Tu código aquí
-    pass
-
-# --- MAIN ---
-if __name__ == '__main__':
-    df_ventas, df_catalogo = extract()
-    df_clean, df_resumen, df_rechazados = transform(df_ventas, df_catalogo)
-    load(df_clean, df_resumen, df_rechazados)
-"></textarea>
-    </div>
-
-    <div class="actions-row">
-      <button class="btn-ghost" onclick="clearEditor()">Limpiar</button>
-      <button class="btn-ghost" onclick="copyAnswer()">Copiar solución</button>
-      <button class="btn btn-primary" id="btn-eval" onclick="evalSolution()">Evaluar con IA →</button>
-    </div>
-
-    <!-- AI FEEDBACK PANEL -->
-    <div id="eval-panel" style="display:none; margin-top:28px;">
-      <div class="section-label">Evaluación automática</div>
-      <div id="eval-loading" style="display:none;">
-        <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:32px 24px; text-align:center;">
-          <div class="spinner" style="width:28px;height:28px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;"></div>
-          <div style="font-size:13px; color:var(--text3); font-family:var(--mono);" id="loading-msg">Analizando código...</div>
-        </div>
-      </div>
-      <div id="eval-result" style="display:none;"></div>
-      <div id="eval-error" style="display:none; background:var(--red-bg); border:1px solid #4d1010; border-radius:10px; padding:16px 20px; font-size:13px; color:#fca5a5;"></div>
-    </div>
-  </div>
-
-</div><!-- /shell -->
-
-<script>
-const Q = [
-  {
-    q: "¿Qué significa ETL y cuál es el orden correcto de sus fases?",
-    opts: ["Extract → Transform → Load","Transform → Extract → Load","Extract → Load → Transform","Load → Extract → Transform"],
-    ans: 0,
-    exp: "<strong>ETL</strong> es Extract (extraer datos de la fuente), Transform (limpiar, normalizar, enriquecer) y Load (cargar al destino). El orden importa: no puedes transformar lo que aún no extrajiste."
-  },
-  {
-    q: "¿Cuál es la diferencia principal entre ETL y ELT?",
-    opts: ["No hay diferencia, son sinónimos","En ELT los datos se cargan primero al destino y las transformaciones ocurren ahí","ETL es para datos estructurados, ELT solo para no estructurados","ETL usa Python, ELT usa SQL exclusivamente"],
-    ans: 1,
-    exp: "En <strong>ELT</strong> (Extract → Load → Transform) los datos crudos se cargan al data warehouse (BigQuery, Snowflake, etc.) y las transformaciones se ejecutan dentro del motor del DWH. Es el patrón dominante en arquitecturas modernas."
-  },
-  {
-    q: "Al leer un CSV con pandas, ¿qué parámetro usarías para procesar por bloques en lugar de cargar todo en memoria?",
-    opts: ["`low_memory=True`","`chunksize=N`","`nrows=N`","`usecols=[...]`"],
-    ans: 1,
-    exp: "<code>chunksize=N</code> hace que <code>pd.read_csv()</code> retorne un iterador de DataFrames de N filas, ideal para archivos que no caben en RAM. <code>nrows</code> solo lee las primeras N filas. <code>usecols</code> filtra columnas."
-  },
-  {
-    q: "¿Qué hace este fragmento?\n`df.dropna(subset=['precio', 'sku'], inplace=True)`",
-    opts: ["Elimina las columnas precio y sku","Rellena los nulos con 0","Elimina filas donde precio O sku sean nulos","Elimina filas solo si ambas columnas son nulas"],
-    ans: 2,
-    exp: "<code>dropna(subset=[...])</code> elimina filas donde <strong>cualquiera</strong> de las columnas del subset tenga valor nulo (comportamiento por defecto <code>how='any'</code>). Para requerir que todas sean nulas se usaría <code>how='all'</code>."
-  },
-  {
-    q: "En un pipeline ETL, ¿qué es la idempotencia y por qué es importante?",
-    opts: ["La capacidad de correr en paralelo","Que ejecutar el pipeline N veces produce el mismo resultado que ejecutarlo 1 vez","Que el pipeline procesa exactamente 1 fila por vez","Que el pipeline no tiene dependencias externas"],
-    ans: 1,
-    exp: "Un pipeline <strong>idempotente</strong> puede re-ejecutarse sin duplicar ni corromper datos. Es crítico para recuperación ante fallos: si el job cae a la mitad y lo reejecutas, el estado final debe ser correcto."
-  },
-  {
-    q: "¿Qué describe mejor la diferencia entre carga completa (full load) y carga incremental?",
-    opts: ["La carga incremental siempre es más lenta","Full load trunca y recarga toda la tabla; incremental solo procesa registros nuevos o modificados","Son equivalentes en rendimiento","La incremental no requiere columna de timestamp o ID"],
-    ans: 1,
-    exp: "<strong>Full load</strong>: TRUNCATE + INSERT de toda la fuente. <strong>Incremental</strong>: usa una marca de agua (timestamp, ID) para procesar solo los deltas. La incremental es más eficiente pero requiere lógica adicional de detección de cambios."
-  },
-  {
-    q: "¿Qué problema resuelve usar `try/except` con logging en la fase de transformación?",
-    opts: ["Hace el código más rápido","Permite continuar el pipeline registrando los registros problemáticos sin abortar todo el proceso","Convierte automáticamente tipos de datos","Comprime los datos de salida"],
-    ans: 1,
-    exp: "Sin manejo de errores, un solo registro malformado puede tirar todo el pipeline. Con <code>try/except</code> + logging puedes 'quarantear' registros fallidos, continuar procesando los válidos y tener trazabilidad para debugging."
-  },
-  {
-    q: "¿Qué hace `df.merge(df2, on='id', how='left')` en el contexto de un ETL?",
-    opts: ["Une los DataFrames solo con los IDs que existen en ambos","Mantiene todos los registros de df y agrega datos de df2 donde haya coincidencia de id","Une y elimina duplicados automáticamente","Hace un UNION apilando filas de ambas tablas"],
-    ans: 1,
-    exp: "Es equivalente a un <strong>LEFT JOIN</strong> en SQL. Todos los registros de <code>df</code> se conservan; los de <code>df2</code> se agregan donde el id coincide. Si no hay match en df2, las columnas quedan como <code>NaN</code>."
-  }
-];
-
-let cur = 0;
-let userAns = new Array(Q.length).fill(null);
-let locked = new Array(Q.length).fill(false);
-
-function render() {
-  const q = Q[cur];
-  const isLocked = locked[cur];
-  const sel = userAns[cur];
-
-  document.getElementById('q-label').textContent = `PREGUNTA ${cur+1} / ${Q.length}`;
-  document.getElementById('q-bar').style.width = `${((cur+1)/Q.length)*100}%`;
-  document.getElementById('btn-prev').disabled = cur === 0;
-  document.getElementById('btn-next').textContent = cur === Q.length-1 ? 'Ver resultado →' : 'Siguiente →';
-
-  const answeredCount = locked.filter(Boolean).length;
-  const correctCount = userAns.filter((a,i) => a === Q[i].ans).length;
-  document.getElementById('q-status').textContent = isLocked
-    ? (sel === q.ans ? '✓ correcta' : '✗ incorrecta')
-    : 'sin responder';
-
-  updateChip();
-
-  let optsHtml = q.opts.map((o,i) => {
-    let cls = 'opt';
-    if (isLocked) {
-      if (i === q.ans) cls += ' correct';
-      else if (i === sel) cls += ' wrong';
-    } else if (i === sel) cls += ' selected';
-    const disabled = isLocked ? 'disabled' : '';
-    return `<button class="${cls}" ${disabled} onclick="pick(${i})">
-      <span class="opt-key">${'ABCD'[i]}</span>
-      <span>${o.replace(/`([^`]+)`/g,'<code>$1</code>')}</span>
-    </button>`;
-  }).join('');
-
-  let feedHtml = '';
-  if (isLocked) {
-    const ok = sel === q.ans;
-    feedHtml = `<div class="feedback ${ok?'correct':'wrong'}">
-      ${ok ? '✓ Correcto. ' : '✗ Incorrecto. '}${q.exp}
-    </div>`;
-  }
-
-  document.getElementById('q-container').innerHTML = `
-    <div class="q-card">
-      <div class="q-top">
-        <div class="q-tag">PREGUNTA ${cur+1} — CONCEPTOS ETL</div>
-        <div class="q-text">${q.q.replace(/\n/g,'<br>').replace(/`([^`]+)`/g,'<code>$1</code>')}</div>
-      </div>
-      <div class="options">${optsHtml}</div>
-      ${feedHtml}
-    </div>`;
-}
-
-function pick(i) {
-  if (locked[cur]) return;
-  userAns[cur] = i;
-  locked[cur] = true;
-  render();
-}
-
-function nextQ() {
-  if (cur < Q.length-1) { cur++; render(); }
-  else showResult();
-}
-
-function prevQ() {
-  if (cur > 0) { cur--; render(); }
-}
-
-function updateChip() {
-  const answeredCount = locked.filter(Boolean).length;
-  const correctCount = userAns.filter((a,i) => a !== null && a === Q[i].ans).length;
-  if (answeredCount === 0) {
-    document.getElementById('chip-num').textContent = '—';
-  } else {
-    document.getElementById('chip-num').textContent = `${correctCount} / ${answeredCount}`;
-  }
-}
-
-function showResult() {
-  const correct = userAns.filter((a,i) => a === Q[i].ans).length;
-  const pct = Math.round((correct / Q.length) * 100);
-  const cls = pct >= 75 ? 'good' : pct >= 50 ? 'mid' : 'low';
-  const msg = pct >= 75 ? 'Buen resultado. Continúa a la etapa de desarrollo.' : pct >= 50 ? 'Resultado aceptable. Repasa los conceptos fallidos antes de continuar.' : 'Refuerza los fundamentos ETL antes de continuar.';
-
-  const reviewHtml = Q.map((q,i) => {
-    const ok = userAns[i] === q.ans;
-    return `<div class="review-item">
-      <div class="review-dot" style="background:${ok?'#22c55e':'#555e6e'}"></div>
-      <span>${i+1}. ${q.q.split('\n')[0].substring(0,65)}${q.q.length > 65 ? '…' : ''}</span>
-    </div>`;
-  }).join('');
-
-  document.getElementById('q-container').innerHTML = `
-    <div class="result-screen">
-      <div class="result-pct ${cls}">${pct}%</div>
-      <div class="result-sub">${correct} de ${Q.length} correctas</div>
-      <div class="result-msg">${msg}</div>
-      <div class="review-list">${reviewHtml}</div>
-    </div>`;
-
-  document.getElementById('q-label').textContent = 'RESULTADO ETAPA 1';
-  document.getElementById('q-status').textContent = '';
-  document.getElementById('q-bar').style.width = '100%';
-  document.getElementById('btn-prev').style.display = 'none';
-  document.getElementById('btn-next').textContent = 'Ir al ejercicio →';
-  document.getElementById('btn-next').onclick = () => goStage(2);
-  document.getElementById('chip-num').textContent = `${correct} / ${Q.length}`;
-}
-
-function goStage(n) {
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===n-1));
-  document.getElementById('stage1').classList.toggle('hidden', n !== 1);
-  document.getElementById('stage2').classList.toggle('active', n === 2);
-  if (n === 1) {
-    document.getElementById('stage1').classList.remove('hidden');
-    document.getElementById('stage2').classList.remove('active');
-  }
-}
-
-function copyCode() {
-  const raw = `import pandas as pd
-
-# Fuente 1: Ventas del sistema POS
 ventas_raw = [
   {"id_venta": 1, "fecha": "2024-01-15", "sku": "A001", "cantidad": 3,    "precio_unitario": 150.0, "tienda": "T01"},
   {"id_venta": 2, "fecha": "2024-01-15", "sku": "B002", "cantidad": None,  "precio_unitario":  80.0, "tienda": "T02"},
@@ -907,209 +227,341 @@ ventas_raw = [
   {"id_venta": 7, "fecha": "baddate",    "sku": "A001", "cantidad": 1,    "precio_unitario": 150.0, "tienda": "T01"},
 ]
 
-# Fuente 2: Catálogo de productos
 catalogo = [
   {"sku": "A001", "nombre_producto": "Camisa Slim",    "categoria": "Ropa"},
   {"sku": "B002", "nombre_producto": "Pantalón Cargo", "categoria": "Ropa"},
   {"sku": "C003", "nombre_producto": "Cinturón Cuero", "categoria": "Accesorios"},
-]`;
-  navigator.clipboard.writeText(raw).then(() => {
-    const btn = document.querySelector('.copy-btn');
-    btn.textContent = '✓ copiado';
-    setTimeout(() => btn.textContent = 'copiar', 1800);
-  });
-}
+]</pre>
+    </div>
 
-function copyAnswer() {
-  const txt = document.getElementById('dev-answer').value;
-  if (!txt.trim()) return;
-  navigator.clipboard.writeText(txt).then(() => {
-    const btn = event.target;
-    btn.textContent = '✓ Copiado';
-    setTimeout(() => btn.textContent = 'Copiar mi solución', 1800);
-  });
-}
+    <div class="sec-lbl">Tareas requeridas</div>
+    <div class="task-list">
+      <div class="task-row"><span class="ttag tt-ex">EXTRACT</span><span>Carga ambas fuentes en DataFrames de pandas.</span></div>
+      <div class="task-row"><span class="ttag tt-tr">TRANSFORM</span><span>Detecta y separa registros inválidos: SKU nulo, cantidad nula o negativa, precio negativo, fecha no parseable. Guárdalos en un DataFrame de rechazados con columna <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">motivo_rechazo</code>.</span></div>
+      <div class="task-row"><span class="ttag tt-tr">ENRIQUECER</span><span>LEFT JOIN con catálogo → agregar <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">nombre_producto</code> y <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">categoria</code>. Calcular <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">total_venta = cantidad × precio_unitario</code>.</span></div>
+      <div class="task-row"><span class="ttag tt-tr">AGREGAR</span><span>Resumen diario por <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">fecha</code> y <code style="font-family:var(--mono);font-size:12px;color:#a78bfa;background:#0f0720;padding:1px 5px;border-radius:3px">categoria</code>: conteo de ventas y monto total.</span></div>
+      <div class="task-row"><span class="ttag tt-lo">LOAD</span><span>Imprime en consola el DataFrame limpio, el resumen y el log de rechazados con etiquetas claras.</span></div>
+      <div class="task-row"><span class="ttag tt-bo">BONUS</span><span>Encapsula cada fase en funciones. Agrega <code style="font-family:var(--mono);font-size:12px;color:var(--amber);background:var(--amber-bg);padding:1px 5px;border-radius:3px">try/except</code> con logging en transformación.</span></div>
+    </div>
 
-function clearEditor() {
-  if (confirm('¿Limpiar el editor?')) document.getElementById('dev-answer').value = '';
-}
+    <div class="sec-lbl">Tu solución</div>
+    <textarea id="dev-code" spellcheck="false" placeholder="import pandas as pd
 
-const loadingMsgs = [
-  'Leyendo el código...', 'Verificando fases ETL...', 'Revisando transformaciones...',
-  'Evaluando manejo de errores...', 'Calculando puntaje...', 'Preparando feedback...'
+def extract():
+    pass
+
+def transform(df_ventas, df_catalogo):
+    pass
+
+def load(df_clean, df_resumen, df_rechazados):
+    pass
+
+if __name__ == '__main__':
+    df_ventas, df_catalogo = extract()
+    df_clean, df_resumen, df_rechazados = transform(df_ventas, df_catalogo)
+    load(df_clean, df_resumen, df_rechazados)
+"></textarea>
+
+    <div id="eval-area" style="margin-top:1rem"></div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:1rem;flex-wrap:wrap">
+      <button class="ghost" onclick="clearCode()">Limpiar</button>
+      <button class="primary" id="btn-eval" onclick="runEval()">Evaluar con IA →</button>
+    </div>
+
+    <div id="submit-box" style="display:none;margin-top:1.5rem">
+      <div class="submit-box">
+        <p>La evaluación está lista. Cuando estés conforme, envía tu resultado para que el entrevistador pueda revisarlo.</p>
+        <button class="primary" id="btn-submit" onclick="submitResult()">Enviar resultado →</button>
+      </div>
+    </div>
+
+    <div id="sent-box" style="display:none">
+      <div class="sent-box">
+        <div class="big">Enviado</div>
+        <p>Tu resultado fue guardado correctamente. El entrevistador podrá revisarlo.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DONE -->
+<div id="s-done" class="screen">
+  <div class="hdr">
+    <div>
+      <h1>Prueba <span>completada</span></h1>
+      <p class="subtitle">Resultado enviado al entrevistador</p>
+    </div>
+  </div>
+  <div class="card" style="text-align:center;padding:2rem">
+    <div style="font-size:48px;font-weight:500;font-family:var(--mono);color:var(--green);margin-bottom:8px">✓</div>
+    <p style="font-size:15px;color:var(--text);font-weight:500;margin-bottom:6px" id="done-name"></p>
+    <p style="font-size:14px;color:var(--text2)">Tu resultado fue guardado. Puedes cerrar esta ventana.</p>
+    <div id="done-scores" style="display:flex;gap:16px;justify-content:center;margin-top:1.5rem;flex-wrap:wrap"></div>
+  </div>
+</div>
+
+</div><!-- /shell -->
+
+<script>
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxbcoln38hdwH43X-UwtJLa_pPOyO2cnphjwSWezZCgPbiPFWYNFtT3mNol7TW-NCLbfg/exec';
+
+const QS = [
+  {
+    q:"¿Qué significa ETL y cuál es el orden correcto de sus fases?",
+    opts:["Extract → Transform → Load","Transform → Extract → Load","Extract → Load → Transform","Load → Extract → Transform"],
+    ans:0,
+    exp:"ETL es Extract (extraer datos de la fuente), Transform (limpiar y enriquecer) y Load (cargar al destino). El orden importa: no puedes transformar lo que no extrajiste."
+  },
+  {
+    q:"¿Cuál es la diferencia principal entre ETL y ELT?",
+    opts:["No hay diferencia, son sinónimos","En ELT los datos se cargan primero al destino y las transformaciones ocurren ahí","ETL es para datos estructurados, ELT solo para no estructurados","ETL usa Python, ELT usa SQL exclusivamente"],
+    ans:1,
+    exp:"En ELT los datos crudos se cargan primero al data warehouse (BigQuery, Snowflake) y las transformaciones se ejecutan dentro del motor. Es el patrón dominante en arquitecturas modernas."
+  },
+  {
+    q:"¿Qué parámetro de `pd.read_csv()` usarías para procesar un archivo por bloques sin cargar todo en memoria?",
+    opts:["`low_memory=True`","`chunksize=N`","`nrows=N`","`usecols=[...]`"],
+    ans:1,
+    exp:"`chunksize=N` retorna un iterador de DataFrames de N filas, ideal para archivos grandes. `nrows` solo lee las primeras N filas. `usecols` filtra columnas pero carga todo el archivo."
+  },
+  {
+    q:"¿Qué hace `df.dropna(subset=['precio','sku'], inplace=True)`?",
+    opts:["Elimina las columnas precio y sku","Rellena los nulos con 0","Elimina filas donde precio O sku sean nulos","Elimina filas solo si ambas columnas son nulas a la vez"],
+    ans:2,
+    exp:"`dropna(subset=[...])` con `how='any'` (por defecto) elimina filas donde cualquiera del subset tenga nulo. Para requerir que todas sean nulas se usa `how='all'`."
+  },
+  {
+    q:"¿Qué es la idempotencia en un pipeline ETL?",
+    opts:["La capacidad de correr en paralelo","Que ejecutar el pipeline N veces produce el mismo resultado que ejecutarlo 1 vez","Que procesa exactamente 1 fila por vez","Que no tiene dependencias externas"],
+    ans:1,
+    exp:"Un pipeline idempotente puede re-ejecutarse sin duplicar ni corromper datos. Es crítico para recuperación ante fallos: si el job cae a la mitad y lo reejecutas, el estado final debe ser correcto."
+  },
+  {
+    q:"¿Qué describe mejor la diferencia entre full load y carga incremental?",
+    opts:["La incremental siempre es más lenta","Full load trunca y recarga toda la tabla; la incremental solo procesa registros nuevos o modificados","Son equivalentes en rendimiento","La incremental no requiere timestamp ni ID"],
+    ans:1,
+    exp:"Full load: TRUNCATE + INSERT de toda la fuente. Incremental: usa una marca de agua (timestamp, ID) para procesar solo los deltas. La incremental es más eficiente pero requiere lógica adicional."
+  },
+  {
+    q:"¿Qué problema resuelve usar `try/except` con logging en la fase de transformación?",
+    opts:["Hace el código más rápido","Permite continuar el pipeline registrando los registros problemáticos sin abortar todo el proceso","Convierte tipos de datos automáticamente","Comprime los datos de salida"],
+    ans:1,
+    exp:"Sin manejo de errores, un registro malformado puede tirar todo el pipeline. Con try/except + logging puedes separar los registros fallidos, continuar con los válidos y tener trazabilidad."
+  },
+  {
+    q:"¿Qué hace `df.merge(df2, on='id', how='left')`?",
+    opts:["Une solo los IDs que existen en ambos DataFrames","Mantiene todos los registros de df y agrega columnas de df2 donde hay coincidencia de id","Une y elimina duplicados automáticamente","Apila filas de ambos DataFrames (UNION)"],
+    ans:1,
+    exp:"Equivale a un LEFT JOIN en SQL. Todos los registros de df (izquierda) se conservan; los de df2 se agregan donde el id coincide. Sin match en df2 las columnas quedan NaN."
+  }
 ];
 
-async function evalSolution() {
-  const code = document.getElementById('dev-answer').value.trim();
-  if (!code) {
-    alert('Escribe tu solución antes de evaluar.');
-    return;
-  }
+let candidateName='', cur=0;
+let userAns=new Array(QS.length).fill(null);
+let locked=new Array(QS.length).fill(false);
+let evalData=null;
 
-  const panel = document.getElementById('eval-panel');
-  const loading = document.getElementById('eval-loading');
-  const result = document.getElementById('eval-result');
-  const errDiv = document.getElementById('eval-error');
-  const btn = document.getElementById('btn-eval');
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0);}
 
-  panel.style.display = 'block';
-  loading.style.display = 'block';
-  result.style.display = 'none';
-  errDiv.style.display = 'none';
-  btn.disabled = true;
-  btn.textContent = 'Evaluando...';
-  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+function startTest(){
+  const n=document.getElementById('inp-name').value.trim();
+  if(!n){alert('Por favor ingresa tu nombre completo.');return;}
+  candidateName=n;
+  document.getElementById('t-name-hdr').textContent=n;
+  show('s-test');
+  renderQ();
+}
 
-  let msgIdx = 0;
-  const msgEl = document.getElementById('loading-msg');
-  const msgInterval = setInterval(() => {
-    msgEl.textContent = loadingMsgs[msgIdx % loadingMsgs.length];
-    msgIdx++;
-  }, 1400);
+function goTab(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n-1));
+  document.getElementById('pane1').style.display=n===1?'block':'none';
+  document.getElementById('pane2').style.display=n===2?'block':'none';
+}
 
-  const prompt = `Eres un evaluador técnico experto en Python y ETL. Evalúa la siguiente solución de un candidato para una prueba técnica.
+function renderQ(){
+  const q=QS[cur], isL=locked[cur], sel=userAns[cur];
+  document.getElementById('q-lbl').textContent=`PREGUNTA ${cur+1} / ${QS.length}`;
+  document.getElementById('q-bar').style.width=`${((cur+1)/QS.length)*100}%`;
+  document.getElementById('btn-prev').disabled=cur===0;
+  document.getElementById('btn-next').textContent=cur===QS.length-1?'Ver resultado →':'Siguiente →';
+  document.getElementById('q-st').textContent=isL?(sel===q.ans?'✓ correcta':'✗ incorrecta'):'sin responder';
+  const c=userAns.filter((a,i)=>a===QS[i].ans).length;
+  const l=locked.filter(Boolean).length;
+  document.getElementById('q-sc').textContent=l?`${c} / ${l} correctas`:'';
+  document.getElementById('t-score-hdr').textContent=`${c}/${l}`;
 
-CONTEXTO DEL EJERCICIO:
-- Datos de entrada: lista de ventas (ventas_raw) con registros intencionalmente sucios (nulos, precios negativos, fechas inválidas) y un catálogo de productos.
-- Se pedía construir un pipeline ETL completo con estas fases:
-  1. EXTRACT: cargar ambas fuentes en DataFrames de pandas
-  2. TRANSFORM-LIMPIEZA: detectar y separar registros inválidos (SKU nulo, cantidad nula/negativa, precio negativo, fecha no parseable) en un DataFrame de rechazados con columna motivo_rechazo
-  3. TRANSFORM-ENRIQUECIMIENTO: LEFT JOIN con catálogo para agregar nombre_producto y categoria, calcular total_venta = cantidad * precio_unitario
-  4. TRANSFORM-AGREGACIÓN: resumen diario por fecha y categoria (conteo de ventas y monto total)
-  5. LOAD: simular carga imprimiendo los resultados con etiquetas claras
-  6. BONUS: encapsular cada fase en funciones + try/except con logging
+  const optsH=q.opts.map((o,i)=>{
+    let cls='opt';
+    if(isL){if(i===q.ans)cls+=' ok';else if(i===sel)cls+=' bad';}
+    else if(i===sel)cls+=' sel';
+    return `<button class="${cls}"${isL?' disabled':''} onclick="pick(${i})"><span class="okey">${'ABCD'[i]}</span><span>${o.replace(/`([^`]+)`/g,'<code>$1</code>')}</span></button>`;
+  }).join('');
 
-SOLUCIÓN DEL CANDIDATO:
+  const fbH=isL?`<div class="fb ${sel===q.ans?'ok':'bad'}">${sel===q.ans?'Correcto. ':'Incorrecto. '}${q.exp}</div>`:'';
+
+  document.getElementById('q-box').innerHTML=`<div class="card" style="margin-bottom:0">
+    <div class="q-num">PREGUNTA ${cur+1} — CONCEPTOS ETL</div>
+    <div class="q-text">${q.q.replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\n/g,'<br>')}</div>
+    <div class="opts">${optsH}</div>${fbH}
+  </div>`;
+}
+
+function pick(i){if(locked[cur])return;userAns[cur]=i;locked[cur]=true;renderQ();}
+function prevQ(){if(cur>0){cur--;renderQ();}}
+function nextQ(){if(cur<QS.length-1){cur++;renderQ();}else showQ1Result();}
+
+function showQ1Result(){
+  const correct=userAns.filter((a,i)=>a===QS[i].ans).length;
+  const pct=Math.round((correct/QS.length)*100);
+  const cls=pct>=75?'good':pct>=50?'mid':'low';
+  const msg=pct>=75?'Buen resultado. Continúa al ejercicio de desarrollo.':pct>=50?'Resultado aceptable. Revisa los conceptos fallidos.':'Refuerza los fundamentos ETL antes de continuar.';
+  const rows=QS.map((q,i)=>`<div class="review-item"><div class="rdot" style="background:${userAns[i]===q.ans?'var(--green)':'var(--border2)'}"></div><span>${i+1}. ${q.q.split('\n')[0].substring(0,62)}${q.q.length>62?'…':''}</span></div>`).join('');
+
+  document.getElementById('q-box').innerHTML=`<div class="card" style="text-align:center;margin-bottom:0">
+    <div class="result-pct ${cls}">${pct}%</div>
+    <div style="font-size:14px;color:var(--text2);margin-bottom:4px">${correct} de ${QS.length} correctas</div>
+    <div style="font-size:13px;color:var(--text3);margin-bottom:1.25rem">${msg}</div>
+    <div style="text-align:left">${rows}</div>
+  </div>`;
+
+  document.getElementById('q-lbl').textContent='RESULTADO ETAPA 1';
+  document.getElementById('q-st').textContent='';
+  document.getElementById('q-bar').style.width='100%';
+  document.getElementById('btn-prev').style.display='none';
+  document.getElementById('btn-next').textContent='Ir al ejercicio →';
+  document.getElementById('btn-next').onclick=()=>goTab(2);
+}
+
+function clearCode(){if(confirm('¿Limpiar el editor?'))document.getElementById('dev-code').value='';}
+
+function copyData(btn){
+  const txt=document.querySelector('pre.cb').textContent;
+  navigator.clipboard.writeText(txt).then(()=>{btn.textContent='✓ copiado';setTimeout(()=>btn.textContent='copiar',1800);});
+}
+
+const lmsgs=['Leyendo el código...','Verificando fases ETL...','Revisando transformaciones...','Evaluando manejo de errores...','Calculando puntaje...','Preparando feedback...'];
+
+async function runEval(){
+  const code=document.getElementById('dev-code').value.trim();
+  if(!code){alert('Escribe tu solución antes de evaluar.');return;}
+  const area=document.getElementById('eval-area');
+  const btn=document.getElementById('btn-eval');
+  btn.disabled=true;btn.textContent='Evaluando...';
+  area.innerHTML=`<div style="padding:2rem;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:10px"><div class="spinner"></div><div id="lm" style="font-size:13px;color:var(--text3);font-family:var(--mono)">Analizando código...</div></div>`;
+
+  let mi=0;
+  const iv=setInterval(()=>{const el=document.getElementById('lm');if(el)el.textContent=lmsgs[mi++%lmsgs.length];},1300);
+
+  const prompt=`Eres un evaluador técnico experto en Python y ETL. Evalúa esta solución de forma justa pero exigente.
+
+EJERCICIO: Pipeline ETL con pandas. Se pedía:
+1. EXTRACT: cargar ventas_raw y catalogo en DataFrames
+2. TRANSFORM-LIMPIEZA: separar inválidos (SKU nulo, cantidad nula/negativa, precio negativo, fecha no parseable) en DataFrame rechazados con columna motivo_rechazo
+3. TRANSFORM-ENRIQUECIMIENTO: LEFT JOIN con catálogo, calcular total_venta = cantidad * precio_unitario
+4. TRANSFORM-AGREGACIÓN: resumen diario por fecha y categoria
+5. LOAD: imprimir resultados con etiquetas claras
+6. BONUS: funciones por fase + try/except
+
+SOLUCIÓN:
 \`\`\`python
 ${code}
 \`\`\`
 
-Evalúa con criterio justo pero exigente. Responde SOLO en este formato JSON exacto, sin texto adicional, sin markdown, sin backticks:
+Responde SOLO JSON sin texto extra ni backticks:
+{"puntaje":<0-100>,"nivel":"<Insuficiente|Básico|Aceptable|Bueno|Excelente>","resumen":"<2-3 oraciones>","criterios":{"extract":"<Completo|Parcial|Ausente>","transformacion":"<Completo|Parcial|Ausente>","enriquecimiento":"<Completo|Parcial|Ausente>","agregacion":"<Completo|Parcial|Ausente>","load":"<Completo|Parcial|Ausente>","manejo_errores":"<Completo|Parcial|Ausente>","estructura":"<Completo|Parcial|Ausente>"},"bien_implementado":["..."],"falta_o_incompleto":["..."],"sugerencias":["..."],"recomendacion":"<Rechazar|Considerar con reservas|Recomendar|Recomendar fuertemente>"}`;
 
-{
-  "puntaje": <número del 0 al 100>,
-  "nivel": "<Insuficiente|Básico|Aceptable|Bueno|Excelente>",
-  "resumen": "<2-3 oraciones describiendo el nivel general del candidato>",
-  "criterios": {
-    "extract": "<Completo|Parcial|Ausente>",
-    "transformacion": "<Completo|Parcial|Ausente>",
-    "enriquecimiento": "<Completo|Parcial|Ausente>",
-    "agregacion": "<Completo|Parcial|Ausente>",
-    "load": "<Completo|Parcial|Ausente>",
-    "manejo_errores": "<Completo|Parcial|Ausente>",
-    "estructura": "<Completo|Parcial|Ausente>"
-  },
-  "bien_implementado": ["<item1>", "<item2>", "<item3>"],
-  "falta_o_incompleto": ["<item1>", "<item2>"],
-  "sugerencias": ["<sugerencia1>", "<sugerencia2>"],
-  "recomendacion_contratacion": "<Rechazar|Considerar con reservas|Recomendar|Recomendar fuertemente>"
-}`;
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    clearInterval(msgInterval);
-
-    if (!res.ok) throw new Error(`API error ${res.status}`);
-    const data = await res.json();
-    const raw = data.content.map(b => b.text || '').join('').trim();
-    const clean = raw.replace(/```json|```/g, '').trim();
-    const ev = JSON.parse(clean);
-
-    renderEval(ev);
-    loading.style.display = 'none';
-    result.style.display = 'block';
-
-  } catch (e) {
-    clearInterval(msgInterval);
-    loading.style.display = 'none';
-    errDiv.style.display = 'block';
-    errDiv.textContent = `Error al evaluar: ${e.message}. Intenta de nuevo.`;
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Evaluar con IA →';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    clearInterval(iv);
+    if(!r.ok)throw new Error(`API error ${r.status}`);
+    const d=await r.json();
+    const raw=d.content.map(b=>b.text||'').join('').trim().replace(/```json|```/g,'').trim();
+    evalData=JSON.parse(raw);
+    area.innerHTML=buildEvalHTML(evalData);
+    document.getElementById('submit-box').style.display='block';
+    document.getElementById('submit-box').scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(e){
+    clearInterval(iv);
+    area.innerHTML=`<div style="background:var(--red-bg);border:1px solid #4d1010;border-radius:10px;padding:14px 16px;font-size:13px;color:#fca5a5">Error al evaluar: ${e.message}. Intenta de nuevo.</div>`;
+  }finally{
+    btn.disabled=false;btn.textContent='Evaluar con IA →';
   }
 }
 
-function critClass(val) {
-  if (val === 'Completo') return 'ok';
-  if (val === 'Parcial') return 'mid';
-  return 'bad';
+function critCls(v){return v==='Completo'?'cv-ok':v==='Parcial'?'cv-mid':'cv-bad';}
+
+function buildEvalHTML(ev){
+  const sc=ev.puntaje;
+  const col=sc>=75?'var(--green)':sc>=50?'var(--amber)':'var(--red)';
+  const cr=ev.criterios;
+  const labels={extract:'Extract',transformacion:'Transform',enriquecimiento:'Join/Enriq.',agregacion:'Agregación',load:'Load',manejo_errores:'Errores',estructura:'Estructura'};
+  const crH=Object.entries(labels).map(([k,l])=>`<div class="crit-cell"><div class="crit-lbl">${l}</div><div class="${critCls(cr[k])}">${cr[k]}</div></div>`).join('');
+  const li=arr=>arr.length?`<ul>${arr.map(i=>`<li>${i}</li>`).join('')}</ul>`:`<span style="font-size:13px;color:var(--text3)">—</span>`;
+  const recCls=ev.recomendacion.includes('fuertemente')||ev.recomendacion==='Recomendar'?'cv-ok':ev.recomendacion.includes('reservas')?'cv-mid':'cv-bad';
+
+  return `<div class="eval-card">
+    <div class="eval-top">
+      <div class="score-big" style="color:${col}">${sc}<span style="font-size:22px;color:var(--text3)">/100</span></div>
+      <div style="flex:1;font-size:14px;color:var(--text2);line-height:1.65">
+        <strong style="color:var(--text);font-weight:500">${ev.nivel}</strong><br>${ev.resumen}<br>
+        <span style="font-family:var(--mono);font-size:11px">Recomendación: </span>
+        <span class="${recCls}" style="font-family:var(--mono);font-size:11px;font-weight:500">${ev.recomendacion}</span>
+      </div>
+    </div>
+    <div class="crit-grid">${crH}</div>
+    <div class="eval-body">
+      <div class="ev-block"><div class="ev-t ev-ok">bien implementado</div>${li(ev.bien_implementado)}</div>
+      <div class="ev-sep"></div>
+      <div class="ev-block"><div class="ev-t ev-warn">falta o incompleto</div>${li(ev.falta_o_incompleto)}</div>
+      <div class="ev-sep"></div>
+      <div class="ev-block"><div class="ev-t ev-info">sugerencias</div>${li(ev.sugerencias)}</div>
+    </div>
+  </div>`;
 }
 
-function scoreClass(n) {
-  if (n >= 75) return 's-high';
-  if (n >= 50) return 's-mid';
-  return 's-low';
-}
+async function submitResult(){
+  if(!evalData){alert('Primero evalúa tu solución con IA.');return;}
+  const btn=document.getElementById('btn-submit');
+  btn.disabled=true;btn.textContent='Guardando...';
 
-function recColor(r) {
-  if (r.includes('fuertemente') || r === 'Recomendar') return 'ok';
-  if (r.includes('reservas')) return 'mid';
-  return 'bad';
-}
-
-function renderEval(ev) {
-  const c = ev.criterios;
-  const criLabels = {
-    extract: 'Extract', transformacion: 'Transform', enriquecimiento: 'Join / enriq.',
-    agregacion: 'Agregación', load: 'Load', manejo_errores: 'Errores', estructura: 'Estructura'
+  const correct=userAns.filter((a,i)=>a===QS[i].ans).length;
+  const payload={
+    name: candidateName,
+    q1_correct: correct,
+    q1_total: QS.length,
+    q1_pct: Math.round((correct/QS.length)*100),
+    eval_puntaje: evalData.puntaje,
+    eval_nivel: evalData.nivel,
+    eval_recomendacion: evalData.recomendacion,
+    eval_resumen: evalData.resumen,
+    code: document.getElementById('dev-code').value
   };
 
-  const critHtml = Object.entries(criLabels).map(([k, label]) => `
-    <div class="crit-item">
-      <div class="crit-label">${label}</div>
-      <div class="crit-val ${critClass(c[k])}">${c[k]}</div>
-    </div>`).join('');
+  try{
+    await fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    document.getElementById('submit-box').style.display='none';
+    document.getElementById('sent-box').style.display='block';
 
-  const listHtml = (arr, icon) => arr.length
-    ? `<ul>${arr.map(i => `<li>${i}</li>`).join('')}</ul>`
-    : `<span style="color:var(--text3);font-size:13px;">—</span>`;
-
-  document.getElementById('eval-result').innerHTML = `
-    <div class="eval-card">
-      <div class="eval-score-row">
-        <div>
-          <div class="score-big ${scoreClass(ev.puntaje)}">${ev.puntaje}<span style="font-size:22px;opacity:0.5">/100</span></div>
+    setTimeout(()=>{
+      document.getElementById('done-name').textContent=candidateName;
+      document.getElementById('done-scores').innerHTML=`
+        <div style="text-align:center">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:4px">TEÓRICAS</div>
+          <div style="font-size:28px;font-weight:500;font-family:var(--mono);color:${correct/QS.length>=.75?'var(--green)':correct/QS.length>=.5?'var(--amber)':'var(--red)'}">${Math.round((correct/QS.length)*100)}%</div>
         </div>
-        <div class="score-meta">
-          <strong>${ev.nivel}</strong><br>
-          ${ev.resumen}<br><br>
-          <span style="font-size:12px;font-family:var(--mono);">Recomendación: </span>
-          <span style="font-size:12px;font-family:var(--mono);font-weight:500;" class="crit-val ${recColor(ev.recomendacion_contratacion)}">${ev.recomendacion_contratacion}</span>
-        </div>
-      </div>
-
-      <div class="criteria-grid">${critHtml}</div>
-
-      <div class="eval-body">
-        <div class="eval-block">
-          <div class="eval-block-title good">✓ Bien implementado</div>
-          ${listHtml(ev.bien_implementado)}
-        </div>
-        <div class="eval-divider"></div>
-        <div class="eval-block">
-          <div class="eval-block-title warn">⚠ Falta o incompleto</div>
-          ${listHtml(ev.falta_o_incompleto)}
-        </div>
-        <div class="eval-divider"></div>
-        <div class="eval-block">
-          <div class="eval-block-title info">↗ Sugerencias de mejora</div>
-          ${listHtml(ev.sugerencias)}
-        </div>
-      </div>
-    </div>`;
+        <div style="width:1px;background:var(--border);align-self:stretch"></div>
+        <div style="text-align:center">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:4px">CÓDIGO</div>
+          <div style="font-size:28px;font-weight:500;font-family:var(--mono);color:${evalData.puntaje>=75?'var(--green)':evalData.puntaje>=50?'var(--amber)':'var(--red)'}">${evalData.puntaje}/100</div>
+        </div>`;
+      show('s-done');
+    },1500);
+  }catch(e){
+    btn.disabled=false;btn.textContent='Enviar resultado →';
+    alert('Error al guardar: '+e.message+'. Intenta de nuevo.');
+  }
 }
-
-render();
 </script>
 </body>
 </html>
